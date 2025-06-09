@@ -1,4 +1,4 @@
-# **PlataformaEducacao - Plataforma de gestão de cursos com DDD, Eventos, Testes e API REST**
+# **PlataformaEducacao - Plataforma de gestão de cursos com DDD, EventSourcing, TDD e API REST**
 
 ## **1. Apresentação**
 
