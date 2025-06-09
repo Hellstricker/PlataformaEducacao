@@ -1,0 +1,6 @@
+@PlataformaEducacao.WebApps.WebApi_HostAddress = http://localhost:5181
+
+GET {{PlataformaEducacao.WebApps.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
