@@ -19,7 +19,7 @@ namespace PlataformaEducacao.GestaoAlunos.Domain.DomainServices
             var aluno = await _alunoRepository.ObterAlunoParaMatriculaPorId(alunoid);
             if (aluno is null) throw new DomainException("Aluno não encontrado.");
 
-            aluno.Matricular(cursoId, nomeCurso);
+            aluno.Matricular(new Matricula(alunoid, cursoId, nomeCurso));
             var matricula = aluno.Matriculas.First(x => x.CursoId == cursoId);
             aluno.AdicionarEvento(new AlunoMatriculadoEvent(alunoid, cursoId));
 

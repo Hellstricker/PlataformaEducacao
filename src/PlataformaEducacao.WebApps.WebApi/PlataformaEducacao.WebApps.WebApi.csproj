@@ -22,15 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PlataformaEducacao.GestaoAlunos.Application\PlataformaEducacao.GestaoAlunos.Application.csproj" />
-    <ProjectReference Include="..\PlataformaEducacao.Core\PlataformaEducacao.Core.csproj" />
+    <ProjectReference Include="..\PlataformaEducacao.GestaoAlunos.Application\PlataformaEducacao.GestaoAlunos.Application.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.GestaoAlunos.Data\PlataformaEducacao.GestaoAlunos.Data.csproj" />
-    <ProjectReference Include="..\PlataformaEducacao.GestaoAlunos.Domain\PlataformaEducacao.GestaoAlunos.Domain.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.GestaoCursos.Application\PlataformaEducacao.GestaoCursos.Application.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.GestaoCursos.Data\PlataformaEducacao.GestaoCursos.Data.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.Pagamentos.AntiCorruption\PlataformaEducacao.Pagamentos.AntiCorruption.csproj" />
-    <ProjectReference Include="..\PlataformaEducacao.Pagamentos.Business\PlataformaEducacao.Pagamentos.Business.csproj" />
-    <ProjectReference Include="..\PlataformaEducacao.Pagamentos.Domain\PlataformaEducacao.Pagamentos.Data.csproj" />
+    <ProjectReference Include="..\PlataformaEducacao.Pagamentos.Data\PlataformaEducacao.Pagamentos.Data.csproj" />
   </ItemGroup>
 
 </Project>

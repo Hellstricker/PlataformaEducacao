@@ -32,11 +32,6 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
             _matriculas.Add(matricula);
         }
 
-        public void Matricular(Guid cursoId, string nomeCurso)
-        {
-            Matricular(new Matricula(this.Id, cursoId, nomeCurso));
-        }
-
         public bool JaMatriculado(Guid cursoId)
         {
             return _matriculas.Any(m => m.CursoId == cursoId);
@@ -65,7 +60,8 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
         }
 
         public void Validar()
-        {
+        {            
+            Validacoes.ValidarSeDiferente(Id, Guid.Empty, "O Id do(a) aluno(a) não pode ser vazio");
             Validacoes.ValidarSeVazio(Nome, "O nome do(a) aluno(a) não pode ser vazio");            
         }
 
