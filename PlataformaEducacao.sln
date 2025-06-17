@@ -45,6 +45,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{A7C148DD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlataformaEducacao.GestaoAlunos.Domain.Tests", "tests\PlataformaEducacao.GestaoAlunos.Domain.Tests\PlataformaEducacao.GestaoAlunos.Domain.Tests.csproj", "{227963F5-48EE-4289-A8D1-FAD5664A521F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BuildingBlocks", "BuildingBlocks", "{C0DC7D9F-F4EE-48C7-A2AB-BD43C469CEB1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventSourcing", "src\EventSourcing\EventSourcing.csproj", "{7F0E19BC-BF7C-40D5-A951-D9CF41CFBF1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +107,10 @@ Global
 		{227963F5-48EE-4289-A8D1-FAD5664A521F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{227963F5-48EE-4289-A8D1-FAD5664A521F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{227963F5-48EE-4289-A8D1-FAD5664A521F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F0E19BC-BF7C-40D5-A951-D9CF41CFBF1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F0E19BC-BF7C-40D5-A951-D9CF41CFBF1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F0E19BC-BF7C-40D5-A951-D9CF41CFBF1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F0E19BC-BF7C-40D5-A951-D9CF41CFBF1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +135,7 @@ Global
 		{32286716-FB6B-7505-7BCA-D853298302E0} = {C1992CBA-2801-4CA1-A365-97C79E6F0AFA}
 		{A7C148DD-D188-4BD4-BAD7-00F22F9C74DB} = {D1EA9F1B-99EB-4AFB-85DD-59C594FBF738}
 		{227963F5-48EE-4289-A8D1-FAD5664A521F} = {A7C148DD-D188-4BD4-BAD7-00F22F9C74DB}
+		{7F0E19BC-BF7C-40D5-A951-D9CF41CFBF1B} = {C0DC7D9F-F4EE-48C7-A2AB-BD43C469CEB1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {38ABF57B-5E59-405A-869E-364262979B71}

@@ -1,7 +1,6 @@
 using PlataformaEducacao.WebApps.WebApi.Configurations;
 using PlataformaEducacao.WebApps.WebApi.Extensions;
 using PlataformaEducacao.WebApps.WebApi.Extensions.Migrations;
-using PlataformaEducacao.WebApps.WebApi.Helpers;
 
 
 var builder = WebApplication.CreateBuilder(args);

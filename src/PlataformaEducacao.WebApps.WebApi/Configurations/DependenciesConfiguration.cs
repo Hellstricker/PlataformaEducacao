@@ -1,5 +1,7 @@
-﻿using MediatR;
+﻿using EventSourcing;
+using MediatR;
 using PlataformaEducacao.Core.Communications.Mediators;
+using PlataformaEducacao.Core.Data.EventSourcing;
 using PlataformaEducacao.Core.Interfaces;
 using PlataformaEducacao.Core.Messages.Messages.IntegrationEvents;
 using PlataformaEducacao.Core.Messages.Messages.Notifications;
@@ -67,6 +69,10 @@ namespace PlataformaEducacao.WebApps.WebApi.Configurations
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             builder.Services.AddScoped<IUser, AspNetUser>();
 
+
+            //EventStore
+            builder.Services.AddSingleton<IEventStoreService, EventStoreService>();
+            builder.Services.AddSingleton<IEventSourcingRepository, EventSourcingRepository>();            
 
             return builder;
         }
