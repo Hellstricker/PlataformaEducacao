@@ -8,7 +8,6 @@ namespace PlataformaEducacao.Pagamentos.Business
         public string Status { get; set; }
         public decimal Valor { get; set; }
         public DadosCartao DadosCartao { get; set; }
-        public Transacao Transacao { get; set; }
-        
+        public Transacao Transacao { get; set; }        
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation.Results;
+using Microsoft.EntityFrameworkCore;
 using PlataformaEducacao.Core.Communications.Mediators;
 using PlataformaEducacao.Core.Data;
 using PlataformaEducacao.Core.Extensions;
@@ -53,6 +54,7 @@ namespace PlataformaEducacao.Pagamentos.Data
                 property.SetColumnType("varchar(100)");
 
             modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<ValidationResult>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(PagamentosContext).Assembly);
 

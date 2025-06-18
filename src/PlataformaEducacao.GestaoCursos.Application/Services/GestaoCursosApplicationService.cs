@@ -33,13 +33,12 @@ namespace PlataformaEducacao.GestaoCursos.Application.Services
 
         public async Task CadastrarCurso(CadastrarCursoDto cursoDto)
         {
-
             await _gestaoCursosDomainService.CadastrarCurso(_mapper.Map<Curso>(cursoDto));
         }
 
-        public async Task CadastrarAula(Guid cursoId, CadastrarAulaDto aulaDto)
+        public async Task<bool> CadastrarAula(Guid cursoId, CadastrarAulaDto aulaDto)
         {
-            await _gestaoCursosDomainService.CadastrarAula(cursoId, _mapper.Map<Aula>(aulaDto));
+            return await _gestaoCursosDomainService.CadastrarAula(cursoId, _mapper.Map<Aula>(aulaDto));
         }
 
         public async Task<IEnumerable<CursoDto>> ObterTodosCursos()

@@ -3,6 +3,7 @@ using PlataformaEducacao.Core.Data;
 using PlataformaEducacao.GestaoAlunos.Domain;
 using PlataformaEducacao.GestaoAlunos.Domain.Interfaces;
 
+
 namespace PlataformaEducacao.GestaoAlunos.Data.Repositories
 {
     public class AlunoRepository : IAlunoRepository
@@ -57,7 +58,7 @@ namespace PlataformaEducacao.GestaoAlunos.Data.Repositories
         {
             return await _context.Matriculas
                 .AsNoTracking()
-                .Where(m => m.AlunoId == alunoId && m.StatusMatricula == StatusMatricula.PENDENTE_PAGAMENTO)
+                .Where(m => m.AlunoId == alunoId && m.StatusMatricula == StatusMatriculaEnum.PENDENTE_PAGAMENTO)
                 .ToListAsync();
         }
 
@@ -70,7 +71,7 @@ namespace PlataformaEducacao.GestaoAlunos.Data.Repositories
         {
             return await _context.Matriculas
                 .AsNoTracking()
-                .Where(m => m.Id == matriculaId && m.StatusMatricula == StatusMatricula.PENDENTE_PAGAMENTO)
+                .Where(m => m.Id == matriculaId && m.StatusMatricula == StatusMatriculaEnum.PENDENTE_PAGAMENTO)
                 .FirstOrDefaultAsync();
         }
 

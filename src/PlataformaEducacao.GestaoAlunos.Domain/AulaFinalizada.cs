@@ -1,4 +1,5 @@
 ﻿using PlataformaEducacao.Core.DomainObjects;
+using PlataformaEducacao.GestaoAlunos.Domain.Validations;
 
 namespace PlataformaEducacao.GestaoAlunos.Domain
 {
@@ -14,5 +15,11 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
         }
 
         public Matricula Matricula { get; private set; }
+
+        public override bool EhValido()
+        {
+            ValidationResult = new AulaFinalizadaValidation().Validate(this);
+            return ValidationResult.IsValid;
+        }
     }
 }

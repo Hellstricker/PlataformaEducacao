@@ -1,4 +1,6 @@
-﻿using PlataformaEducacao.Core.Messages;
+﻿using FluentValidation.Results;
+using PlataformaEducacao.Core.Messages;
+
 
 namespace PlataformaEducacao.Core.DomainObjects
 {
@@ -8,6 +10,7 @@ namespace PlataformaEducacao.Core.DomainObjects
 
         private List<Event> _notificacoes;
         public IReadOnlyCollection<Event> Notificacoes => _notificacoes.AsReadOnly();
+        public ValidationResult ValidationResult { get; set; }
 
         protected Entity()
         {
@@ -59,6 +62,11 @@ namespace PlataformaEducacao.Core.DomainObjects
         public static bool operator !=(Entity left, Entity right)
         {
             return !(left == right);
+        }
+
+        public virtual bool EhValido()
+        {
+            throw new NotImplementedException("A classe derivada deve implementar o método EhValido para validar a entidade.");
         }
     }
 }

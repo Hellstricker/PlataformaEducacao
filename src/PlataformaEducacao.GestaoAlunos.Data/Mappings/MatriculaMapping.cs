@@ -18,7 +18,7 @@ namespace PlataformaEducacao.GestaoAlunos.Data.Mappings
             builder.Property(m => m.StatusMatricula)
                 .IsRequired()
                 .HasColumnType("varchar(50)")
-                .HasConversion(statusMatricula => statusMatricula.ToString(), statusMatricula=> (StatusMatricula)Enum.Parse(typeof(StatusMatricula), statusMatricula));
+                .HasConversion(statusMatricula => statusMatricula.ToString(), statusMatricula=> (StatusMatriculaEnum)Enum.Parse(typeof(StatusMatriculaEnum), statusMatricula));
             builder.HasOne(m => m.Aluno)
                 .WithMany(a => a.Matriculas)
                 .HasForeignKey(m => m.AlunoId);

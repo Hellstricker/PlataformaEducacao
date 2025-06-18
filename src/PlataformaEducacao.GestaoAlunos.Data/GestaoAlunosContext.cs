@@ -4,6 +4,7 @@ using PlataformaEducacao.Core.Data;
 using PlataformaEducacao.Core.Messages;
 using PlataformaEducacao.GestaoAlunos.Domain;
 using PlataformaEducacao.Core.Extensions;
+using FluentValidation.Results;
 
 namespace PlataformaEducacao.GestaoAlunos.Data
 {
@@ -33,6 +34,7 @@ namespace PlataformaEducacao.GestaoAlunos.Data
                 property.SetColumnType("datetime");
 
             modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<ValidationResult>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GestaoAlunosContext).Assembly);
 

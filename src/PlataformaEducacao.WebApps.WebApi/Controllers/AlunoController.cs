@@ -75,7 +75,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
             else
                 NotificarErro("CursoNaoEncontrado", "Curso não encontrado.");
 
-            return CustomResponse();
+            return CustomResponse("Matricula realizada com sucesso.");
         }
 
         [Authorize(Roles = nameof(PerfilUsuario.ALUNO))]
@@ -99,7 +99,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
             else
                 NotificarErro("CursoNaoEncontrado", "Matricula não encontrada ou não está pendende de pagamento.");
 
-            return CustomResponse();
+            return CustomResponse("Pagamento realizado com sucesso.");
         }
 
         [Authorize(Roles = nameof(PerfilUsuario.ALUNO))]
@@ -126,7 +126,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
 
             await _gestaoAlunosApplicationService.FinalizarAula(AlunoId, model.CursoId, model.AulaId, curso.Aulas.Count());
 
-            return CustomResponse();
+            return CustomResponse("Aula finalizada com sucesso.");
         }
     }
 }

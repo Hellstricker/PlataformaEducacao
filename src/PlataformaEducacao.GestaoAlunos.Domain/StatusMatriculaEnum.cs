@@ -1,6 +1,6 @@
 ﻿namespace PlataformaEducacao.GestaoAlunos.Domain
 {
-    public enum StatusMatricula
+    public enum StatusMatriculaEnum
     {
         PENDENTE_PAGAMENTO,
         EM_ANDAMENTO,

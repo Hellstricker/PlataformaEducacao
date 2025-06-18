@@ -3,6 +3,6 @@
     public interface IGestaoCursosDomainService
     {
         Task CadastrarCurso(Curso curso);
-        Task CadastrarAula(Guid cursoId, Aula aula);
+        Task<bool> CadastrarAula(Guid cursoId, Aula aula);
     }
 }

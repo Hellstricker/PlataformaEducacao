@@ -34,7 +34,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             await _gestaoCursosApplicationService.CadastrarCurso(cursoDto);
-            return CustomResponse();
+            return CustomResponse($"Curso cadastrado com sucesso.");
         }
 
         [Authorize(Roles = nameof(PerfilUsuario.ADMIN))]
@@ -45,7 +45,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
             await _gestaoCursosApplicationService.CadastrarAula(id, aulaDto);
-            return CustomResponse();
+            return CustomResponse("Aula cadastrada com sucesso.");
         }
 
         [AllowAnonymous]

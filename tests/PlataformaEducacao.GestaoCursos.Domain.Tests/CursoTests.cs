@@ -1,12 +1,17 @@
 using AutoMapper;
+using FluentValidation.TestHelper;
+using MediatR;
 using Moq;
 using Moq.AutoMock;
+using PlataformaEducacao.Core.Communications.Mediators;
 using PlataformaEducacao.Core.DomainObjects;
+using PlataformaEducacao.Core.Messages.Messages.Notifications;
 using PlataformaEducacao.GestaoCursos.Application.Dtos;
 using PlataformaEducacao.GestaoCursos.Application.Services;
 using PlataformaEducacao.GestaoCursos.Domain;
 using PlataformaEducacao.GestaoCursos.Domain.DomainServices;
 using PlataformaEducacao.GestaoCursos.Domain.Interfaces;
+using PlataformaEducacao.GestaoCursos.Domain.Validations;
 namespace PlataformaEducacao.GestaoCursos.Domain.Tests
 {
     public class CursoTests
@@ -15,20 +20,30 @@ namespace PlataformaEducacao.GestaoCursos.Domain.Tests
         [Trait("Curso", "1 Curso Tests")]
         public void Curso_Validar_ValidacaoDeveRetornarCursoSemValorException()
         {
-            // Arrange & Act
-            Action act = () => { var curso = new Curso("Curso", 0, new ConteudoProgramatico("Objetivo", "Conteudo")); };
+            //Aarrange
+            var curso = new Curso("Curso", 0, new ConteudoProgramatico("Objetivo", "Conteudo"));            
+            // Act 
+            curso.EhValido(); 
             // Assert
-            Assert.Equal("O valor do curso deve ser maior que zero", Assert.Throws<DomainException>(act).Message);
+            Assert.False(curso.ValidationResult.IsValid);
+            Assert.True(curso.ValidationResult.Errors.Any());
+            Assert.Single(curso.ValidationResult.Errors);
+            Assert.Equal("O valor do curso deve ser maior que zero", curso.ValidationResult.Errors.First().ErrorMessage);
         }
 
         [Fact(DisplayName = "Criar Curso Sem Nome Exception")]
         [Trait("Curso", "1 Curso Tests")]
         public void Curso_Validar_ValidacaoDeveRetornarCursoSemNomeException()
         {
-            // Arrange & Act
-            Action act = () => { var curso = new Curso(string.Empty, 10, new ConteudoProgramatico("Objetivo", "Conteudo")); };
+            //Arrange
+            var curso = new Curso(string.Empty, 10, new ConteudoProgramatico("Objetivo", "Conteudo"));
+            var resultado = new CursoValidation();
+            // Act
+            resultado.TestValidate(curso);
             // Assert
-            Assert.Equal("Informe o nome do curso", Assert.Throws<DomainException>(act).Message);
+            resultado.SingleOrDefault(resultado => resultado.PropertyName == "Nome");
+                
+            //Assert.Contains("O nome do curso não pode ser vazio", curso.ValidationResult.Errors.First().ErrorMessage);
         }
 
         [Fact(DisplayName = "Criar Curso Sem Objetivo Exception")]

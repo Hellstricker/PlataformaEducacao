@@ -1,4 +1,5 @@
 ﻿using PlataformaEducacao.Core.DomainObjects;
+using PlataformaEducacao.GestaoCursos.Domain.Validations;
 
 namespace PlataformaEducacao.GestaoCursos.Domain
 {
@@ -21,7 +22,7 @@ namespace PlataformaEducacao.GestaoCursos.Domain
             this.Nome = nome;
             this.ConteudoProgramatico = conteudoProgramatico;
             this.Valor = valor;
-            Validar();
+            
         }
 
         public void AdicionarAula(Aula aula)
@@ -32,10 +33,10 @@ namespace PlataformaEducacao.GestaoCursos.Domain
             _aulas.Add(aula);
         }
 
-        private void Validar()
+        public override bool EhValido()
         {
-            Validacoes.ValidarSeVazio(Nome, "Informe o nome do curso");
-            Validacoes.ValidarSeMenorOuIgual(Valor, 0, "O valor do curso deve ser maior que zero");
+            ValidationResult = new CursoValidation().Validate(this);
+            return ValidationResult.IsValid;
         }
     }
 }

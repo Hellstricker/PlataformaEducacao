@@ -9,17 +9,10 @@ namespace PlataformaEducacao.GestaoCursos.Domain
         public ConteudoProgramatico(string? objetivo, string? conteudo)
         {
             this.Objetivo = objetivo;
-            this.Conteudo = conteudo;
-            Validar();
+            this.Conteudo = conteudo;            
         }
 
         public string? Objetivo { get; private set; }
         public string? Conteudo { get; private set; }
-
-        private void Validar()
-        {
-            Validacoes.ValidarSeVazio(Objetivo, "Informe o objetivo do curso");
-            Validacoes.ValidarSeVazio(Conteudo, "Informe o conteúdo do curso");
-        }
     }
 }

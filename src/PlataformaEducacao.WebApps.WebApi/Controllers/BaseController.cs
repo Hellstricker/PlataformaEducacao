@@ -35,16 +35,15 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
             _mediatorHandler.PublicarNotificacao(new DomainNotification(codigo, mensagem));
         }
 
-        protected ActionResult CustomResponse(object? result = null, bool? isCreation = false)
+        protected ActionResult CustomResponse(object? result = null)
         {
             if (OperacaoValida())
-            {                
+            {   
                 return Ok(new
                 {
                     success = true,
                     data = result
                 });
-
             }
 
             return BadRequest(new

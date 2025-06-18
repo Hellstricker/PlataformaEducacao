@@ -4,6 +4,7 @@ using PlataformaEducacao.Core.Data;
 using PlataformaEducacao.Core.Messages;
 using PlataformaEducacao.GestaoCursos.Domain;
 using PlataformaEducacao.Core.Extensions;
+using FluentValidation.Results;
 
 namespace PlataformaEducacao.GestaoCursos.Data
 {
@@ -27,6 +28,7 @@ namespace PlataformaEducacao.GestaoCursos.Data
                 property.SetColumnType("varchar(100)");
 
             modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<ValidationResult>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GestaoCursosContext).Assembly);
 

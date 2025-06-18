@@ -1,4 +1,5 @@
 ﻿using PlataformaEducacao.Core.DomainObjects;
+using PlataformaEducacao.GestaoAlunos.Domain.Validations;
 
 namespace PlataformaEducacao.GestaoAlunos.Domain
 {
@@ -7,7 +8,7 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
         private readonly List<AulaFinalizada> _aulasFinalizadas;
         private Matricula()
         {
-            StatusMatricula = StatusMatricula.PENDENTE_PAGAMENTO;
+            StatusMatricula = StatusMatriculaEnum.PENDENTE_PAGAMENTO;
             _aulasFinalizadas = new List<AulaFinalizada>();
         }
 
@@ -22,7 +23,7 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
         public Guid AlunoId { get; private set; }
         public Guid CursoId { get; private set; }
         public string NomeCurso { get;private set; }
-        public StatusMatricula StatusMatricula { get; private set; }
+        public StatusMatriculaEnum StatusMatricula { get; private set; }
         public IReadOnlyCollection<AulaFinalizada> AulasFinalizadas => _aulasFinalizadas;
 
         public HistoricoAprendizado HistoricoAprendizado { get; private set; }
@@ -37,7 +38,7 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
 
         public void Pagar()
         {
-            StatusMatricula = StatusMatricula.EM_ANDAMENTO;
+            StatusMatricula = StatusMatriculaEnum.EM_ANDAMENTO;
         }
 
         public void FinalizarAula(Guid aulaId)
@@ -56,68 +57,21 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
         {
             if (HistoricoAprendizado.Progresso == 100)
             {
-                StatusMatricula = StatusMatricula.CONCLUIDA;
+                StatusMatricula = StatusMatriculaEnum.CONCLUIDA;
             }
         }
 
         public void GerarCertificado()
         {
-            if(StatusMatricula != StatusMatricula.CONCLUIDA)
+            if(StatusMatricula != StatusMatriculaEnum.CONCLUIDA)
                 throw new DomainException("Só é possível gerar certificado para matrículas concluídas");
             Certificado = new Certificado(NomeCurso, Id);                
         }
 
-
-
-
-        //public void AtualizarProgresso(decimal percentualConclusao, int horasEstudadas, decimal notaFinal = 0)
-        //{
-        //    if (Status != StatusMatricula.Ativa)
-        //        throw new InvalidOperationException("Não é possível atualizar progresso de matrícula inativa");
-
-        //    var dataConclusao = percentualConclusao >= 100 ? DateTime.UtcNow : (DateTime?)null;
-
-        //    HistoricoAprendizado = new HistoricoAprendizado(
-        //        HistoricoAprendizado.DataInicio,
-        //        percentualConclusao,
-        //        horasEstudadas,
-        //        notaFinal,
-        //        dataConclusao
-        //    );
-
-        //    if (percentualConclusao >= 100)
-        //    {
-        //        Status = StatusMatricula.Concluida;
-        //        DataConclusao = DateTime.UtcNow;
-        //    }
-        //}
-
-        //public void GerarCertificado(string numeroCertificado, int cargaHoraria)
-        //{
-        //    if (Status != StatusMatricula.Concluida)
-        //        throw new InvalidOperationException("Só é possível gerar certificado para matrículas concluídas");
-
-        //    if (Certificado != null)
-        //        throw new InvalidOperationException("Certificado já foi gerado para esta matrícula");
-
-        //    Certificado = new Certificado(numeroCertificado, NomeCurso, cargaHoraria, HistoricoAprendizado.NotaFinal);
-        //}
-
-        //public void Cancelar()
-        //{
-        //    if (Status == StatusMatricula.Cancelada)
-        //        throw new InvalidOperationException("Matrícula já está cancelada");
-
-        //    Status = StatusMatricula.Cancelada;
-        //}
-
-        //public void Reativar()
-        //{
-        //    if (Status != StatusMatricula.Cancelada)
-        //        throw new InvalidOperationException("Só é possível reativar matrículas canceladas");
-
-        //    Status = StatusMatricula.Ativa;
-        //}
-
+        public override bool EhValido()
+        {
+            ValidationResult = new MatriculaValidation().Validate(this);
+            return ValidationResult.IsValid;
+        }
     }
 }

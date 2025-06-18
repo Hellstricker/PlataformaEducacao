@@ -1,4 +1,5 @@
 ﻿using PlataformaEducacao.Core.DomainObjects;
+using PlataformaEducacao.GestaoAlunos.Domain.Validations;
 
 namespace PlataformaEducacao.GestaoAlunos.Domain
 {
@@ -17,16 +18,13 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
             NumeroCertificado = Guid.NewGuid();            
             NomeCurso = nomeCurso;                        
             Ativo = true;
-            MatriculaId = matriculaId;
-            Validar();
+            MatriculaId = matriculaId;         
         }
-
-        //TODO:Adicionar validação nesta entidade e nome do curso na entitade matriula
-
-        public void Validar()
+       
+        public override bool EhValido()
         {
-            Validacoes.ValidarSeVazio(NomeCurso, "O nome do Curdo não pode ser vazio");
-            Validacoes.ValidarSeDiferente(MatriculaId, Guid.Empty, "O Id da matrícula não pode ser vazio");
+            ValidationResult = new CertificadoValidation().Validate(this);
+            return ValidationResult.IsValid;
         }
 
     }

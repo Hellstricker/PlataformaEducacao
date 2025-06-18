@@ -1,4 +1,5 @@
 ﻿using PlataformaEducacao.Core.DomainObjects;
+using PlataformaEducacao.GestaoCursos.Domain.Validations;
 
 namespace PlataformaEducacao.GestaoCursos.Domain
 {
@@ -12,8 +13,6 @@ namespace PlataformaEducacao.GestaoCursos.Domain
             Conteudo = conteudo;
             TotalMinutos = totalMinutos;
             CursoId = cursoId;
-
-            Validar();
         }
 
         public string? Titulo { get; private set; }
@@ -27,11 +26,10 @@ namespace PlataformaEducacao.GestaoCursos.Domain
             this.CursoId = id;
         }
 
-        public void Validar()
+        public override bool EhValido()
         {
-            Validacoes.ValidarSeVazio(Titulo, "O título da aula não pode ser vazio");
-            Validacoes.ValidarSeVazio(Conteudo, "O conteúdo da aula não pode ser vazio");
-            Validacoes.ValidarSeDiferente(CursoId, Guid.Empty, "O curso precisa ser informado");
+            ValidationResult = new AulaValidation().Validate(this);
+            return ValidationResult.IsValid;
         }
     }
 }

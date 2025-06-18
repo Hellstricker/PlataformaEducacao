@@ -17,7 +17,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Filters
                 error = context.Exception.Message,
                 trace = context.Exception.StackTrace,
             });
-            result.StatusCode = StatusCodes.Status500InternalServerError; ;
+            result.StatusCode = StatusCodes.Status500InternalServerError;
 
 
             switch (context.Exception)

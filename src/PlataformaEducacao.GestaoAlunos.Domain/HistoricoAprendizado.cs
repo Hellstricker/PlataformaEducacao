@@ -6,7 +6,10 @@ namespace PlataformaEducacao.GestaoAlunos.Domain
     {        
         public decimal? Progresso { get; private set; }
 
-        public bool EstaCompleto() => Progresso == 100;
+        public bool EstaCompleto()
+        {
+            return Progresso == 100M;
+        } 
 
         public void AtualizarProgresso(int aulasAssistidas, int totalAulas)
         {
