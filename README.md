@@ -1,10 +1,11 @@
-# **PlataformaEducacao - Plataforma de gestão de cursos com DDD, EventSourcing, TDD e API REST**
+# **PlataformaEducacao - Plataforma de gestão de cursos com DDD, TDD, CQRS, Identity, JWT e API REST**
 
 ## **1. Apresentação**
 
 Bem-vindo ao repositório do projeto **Plataforma de Educação Online**. Este projeto é uma entrega do MBA DevXpert Full Stack .NET e é referente ao módulo **Arquitetura, Modelagem e Qualidade de Software**.
-O objetivo principal foi desenvolver uma plataforma educacional online com múltiplos bounded contexts (BC), aplicando DDD, TDD, CQRS e padrões arquiteturais para gestão eficiente de conteúdos educacionais, alunos e processos financeiros .
+O objetivo principal foi desenvolver uma plataforma educacional online com múltiplos bounded contexts (BC), aplicando DDD, TDD, CQRS e padrões arquiteturais para gestão eficiente de conteúdos educacionais, alunos e processos financeiros.
 
+O objetiovo ainda não fon concluído, mas pretendo fazê-lo.
 
 ### **Autor(es)**
 - **Ozias Manoel costa Neto**
@@ -12,7 +13,7 @@ O objetivo principal foi desenvolver uma plataforma educacional online com múlt
 ## **2. Proposta do Projeto**
 
 O projeto consiste em:
-- **Bounded Contexts:** Gestão de cursos para gerir cursos e aulas; Gestão de Alunos, para gerir alunos, aulas assistidas, certificados e matriculas; Pagamentos, para realizar o pagamento das matrícculas.
+- **Bounded Contexts:** Cadastros para, gerir cursos e aulas; Gestao, para gerir alunos, aulas assistidas, certificados e matriculas; Pagamentos, para realizar o pagamento das matrículas.
 - **API RESTful:** Exposição dos recursos do blog para integração com outras aplicações ou desenvolvimento de front-ends alternativos.
 - **Autenticação e Autorização:** Implementação de controle de acesso, diferenciando administradores e usuários comuns.
 - **Acesso a Dados:** Implementação de acesso ao banco de dados através de ORM.
@@ -36,27 +37,27 @@ A estrutura do projeto é organizada da seguinte forma:
 
 - src/
   - PlataformaEducacao.Core/ - Contém todas as definições comuns aos deomínios compartilhados.
-  - PlataformaEducacao.GestaoAlunos.Application/ - DTOs e ApplicationService do Bounded Context Gestaoalunos
-  - PlataformaEducacao.GestaoAlunos.Data / Todo acesso a dados do Bounded Context Gestaoalunos
-  - PlataformaEducacao.GestaoAlunos.Domain / Entidades de domínio do Bounded Context Gestaoalunos
-  - PlataformaEducacao.GestaoCursos.Application/ - DTOs e ApplicationService do Bounded Context GestaoCursos
-  - PlataformaEducacao.GestaoCursos.Data / Todo acesso a dados do Bounded Context GestaoCursos
-  - PlataformaEducacao.GestaoCursos.Domain / Entidades de domínio do Bounded Context GestaoCursos
-  - PlataformaEducacao.Pagamentos.AntiCorruption/ - Camada anti corrupção para simulação de pagamento
-  - PlataformaEducacao.Pagamentos.Business / Entidades de domínio do Bounded Context GestaoCursos
-  - PlataformaEducacao.Pagamentos.Data / Todo acesso a dados do Bounded Context Pagamentos
+  - PlataformaEducacao.Gestao.Application/ - Commands, CommandHandler do Bounded Context Gestao
+  - PlataformaEducacao.Gestao.Data / Todo acesso a dados do Bounded Context Gestao
+  - PlataformaEducacao.Gestao.Domain / Entidades de domínio do Bounded Context Gestao
+  - PlataformaEducacao.Cadastros.Application/ - DTOs e ApplicationService do Bounded Context Cadastros
+  - PlataformaEducacao.Cadastros.Data / Todo acesso a dados do Bounded Context Cadastros
+  - PlataformaEducacao.Cadastros.Domain / Entidades de domínio do Bounded Context Cadastros    
   - PlataformaEducacao.WebApps.WebApi / API para exposição de endpoints para acesso às funcionalidades implementadas
 - tests/
-  - PlataformaEducacao.GestaoCursos.Domain.Tests/ - Testes do domínio do contexto GestaoCursos
+  - PlataformaEducacao.Cadastros.Application.Tests/ - Testes de unidade do projeto PlataformaEducacao.Cadastros.Application
+  - PlataformaEducacao.Cadastros.Domain.Tests/ - Testes de unidade do projeto PlataformaEducacao.Cadastros.Domain
+  - PlataformaEducacao.Gestao.Application.Tests/ - Testes de unidade do projeto PlataformaEducacao.Gestao.Application
+  - PlataformaEducacao.Gestao.Domain.Tests/ - Testes de unidade do projeto PlataformaEducacao.Gestao.Domain.Tests
+  - PlataformaEducacao.WebApps.Tests/ - Testes de integração
 - README.md - Arquivo de Documentação do Projeto
 - FEEDBACK.md - Arquivo para Consolidação dos Feedbacks
 - .gitignore - Arquivo de Ignoração do Git
 
 ## **5. Funcionalidades Implementadas**
 
-- **BC GestaoCursos:** Bounded context que permite cadastrar cursos e aulas tendo a entidade Curso como AggregateRoot.
-- **BC GestaoAlunos:** Bounded context que permite matricular aluno em cursos, acompanhamento das aulas assistidas, finalização de cursos e emissão de certificados.
-- **BC Pagamentos:** Bounded context que permite a realização da simulação do pagamento de matriculas.
+- **BC Cadastro:** Bounded context que permite cadastrar cursos e aulas tendo a entidade Curso como AggregateRoot.
+- **BC Gestao:** Bounded context que permite matricular aluno em cursos, acompanhamento das aulas assistidas, finalização de cursos e emissão de certificados.
 - **Eventos:** Eventos para comunicação entre os bounded contexts de forma desacoplada.
 - **Autenticação e Autorização:** Diferenciação entre usuários administradores e alunos.
 - **API REST:** Exposição de endpoints para operações dos bounded contexts GestaoCursos e GestaoAlunos e Pagamento.
@@ -98,7 +99,7 @@ A estrutura do projeto é organizada da seguinte forma:
 
 A documentação da API está disponível através do Swagger. Após iniciar a API, acesse a documentação em:
 
-http://localhost:7103/swagger
+http://localhost:7106/swagger
 
 ## **9. Avaliação**
 
