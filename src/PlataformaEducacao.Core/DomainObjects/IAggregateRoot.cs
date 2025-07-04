@@ -1,4 +1,6 @@
 ﻿namespace PlataformaEducacao.Core.DomainObjects
 {
-    public interface IAggregateRoot{}
+    public interface IAggregateRoot
+    {
+    }
 }

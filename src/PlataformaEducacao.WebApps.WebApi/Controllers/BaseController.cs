@@ -2,18 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using PlataformaEducacao.Core.Communications.Mediators;
 using PlataformaEducacao.Core.Interfaces;
-using PlataformaEducacao.Core.Messages.Messages.Notifications;
+using PlataformaEducacao.Core.Messages.Notifications;
+using PlataformaEducacao.WebApps.WebApi.ViewModels;
 
 namespace PlataformaEducacao.WebApps.WebApi.Controllers
 {
     [Authorize]
-    [Route("api/[Controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public abstract class BaseController : ControllerBase
     {
         private readonly IDomainNotificationHandler _notifications;
-        private readonly IMediatorHandler _mediatorHandler;
-        protected Guid AlunoId = Guid.Empty; //Guid.Parse("00000000-0000-0000-0000-000000000001");
+        protected readonly IMediatorHandler _mediatorHandler;
+        protected Guid AlunoId = Guid.Empty;
 
         public BaseController(IDomainNotificationHandler notifications, IMediatorHandler mediatorHandler, IUser loggedUser)
         {
@@ -23,7 +24,6 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
                 AlunoId = loggedUser.GetId();
         }
 
-        
 
         protected bool OperacaoValida()
         {
@@ -35,23 +35,23 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
             _mediatorHandler.PublicarNotificacao(new DomainNotification(codigo, mensagem));
         }
 
-        protected ActionResult CustomResponse(object? result = null)
+        protected ActionResult CustomResponse(object? result = null, bool? isPost = false)
         {
-            if (OperacaoValida())
-            {   
-                return Ok(new
+            if (!OperacaoValida())
+            {
+                return BadRequest(new
                 {
-                    success = true,
-                    data = result
+                    Success = false,
+                    Errors = _notifications.ObterNotificacoes().Select(n => n.Value)
                 });
             }
 
-            return BadRequest(new
+            return Ok(new
+                BaseResultViewModel
             {
-                success = false,
-                errors = _notifications.ObterNotificacoes().Select(n => n.Value)
+                Success = true,
+                Data = result
             });
         }
-
     }
 }

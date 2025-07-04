@@ -8,7 +8,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Configurations
         {
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(swagger =>
-            {                
+            {
                 swagger.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = "Insira o token JWT neste formato : Bearer {TOKEN}",
@@ -33,9 +33,8 @@ namespace PlataformaEducacao.WebApps.WebApi.Configurations
                         Array.Empty<string>()
                     }
                 });
-            }); 
+            });
             return builder;
         }
     }
 }
-

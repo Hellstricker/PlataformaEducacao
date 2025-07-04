@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using PlataformaEducacao.WebApps.WebApi.Contexts;
-using PlataformaEducacao.WebApps.WebApi.Extensions.Identity;
-using PlataformaEducacao.WebApps.WebApi.Extensions.Jwts;
+using PlataformaEducacao.WebApps.WebApi.Extensions;
+using PlataformaEducacao.WebApps.WebApi.Extensions.Identities;
 using System.Text;
 
 namespace PlataformaEducacao.WebApps.WebApi.Configurations
@@ -57,5 +57,4 @@ namespace PlataformaEducacao.WebApps.WebApi.Configurations
             return builder;
         }
     }
-    
 }

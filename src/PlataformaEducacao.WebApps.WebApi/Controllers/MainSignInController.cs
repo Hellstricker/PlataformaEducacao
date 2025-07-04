@@ -1,13 +1,13 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PlataformaEducacao.Core.Communications.Mediators;
 using PlataformaEducacao.Core.Interfaces;
-using PlataformaEducacao.Core.Messages.Messages.Notifications;
+using PlataformaEducacao.Core.Messages;
+using PlataformaEducacao.Core.Messages.Notifications;
 using PlataformaEducacao.WebApps.WebApi.Contexts;
-using PlataformaEducacao.WebApps.WebApi.Extensions.Jwts;
+using PlataformaEducacao.WebApps.WebApi.Extensions;
 using PlataformaEducacao.WebApps.WebApi.ViewModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -21,20 +21,22 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
         protected readonly RoleManager<IdentityRole<Guid>> _roleManager;
         private readonly JwtSettings _jwtSettings;
         private readonly ApplicationDbContext _context;
-
         public MainSignInController(
+            IDomainNotificationHandler notifications, 
+            IMediatorHandler mediatorHandler, 
+            IUser loggedUser,
             UserManager<IdentityUser<Guid>> userManager,
             RoleManager<IdentityRole<Guid>> roleManager,
             IOptions<JwtSettings> jwtSettings,
-            ApplicationDbContext context,
-            IDomainNotificationHandler notificador, IMapper mapper, IUser appUser, IMediatorHandler mediatorHandler)
-            : base(notificador, mediatorHandler, appUser)
-        {
+            ApplicationDbContext context)
+            : base(notifications, mediatorHandler, loggedUser)
+        {    
             _userManager = userManager;
             _roleManager = roleManager;
             _jwtSettings = jwtSettings.Value;
             _context = context;
         }
+
         protected async Task<LoginResponseViewModel> GetJwt(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -89,5 +91,5 @@ namespace PlataformaEducacao.WebApps.WebApi.Controllers
         {
             return (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
         }
-    }
+    }    
 }

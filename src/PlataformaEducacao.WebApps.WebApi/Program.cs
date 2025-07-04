@@ -1,28 +1,37 @@
 using PlataformaEducacao.WebApps.WebApi.Configurations;
-using PlataformaEducacao.WebApps.WebApi.Extensions;
 using PlataformaEducacao.WebApps.WebApi.Extensions.Migrations;
+using PlataformaEducacao.WebApps.WebApi.Extensions.Swaggers;
 
+public partial class Program
+{
+    public static void Main(string[] args)
+    {
+        var builder = WebApplication.CreateBuilder(args);
 
-var builder = WebApplication.CreateBuilder(args);
+        builder
+            .ResolveDependencies()
+            .AddContextsConfiguration()
+            .AddIdentityConfiguration()
+            .AddSwaggerConfiguration();
 
-builder
-    .AddApiConfiguration()
-    .AddIdentityConfiguration()
-    .AddMapperConfiguration()
-    .AddContextsConfiguration()
-    .AddSwaggerConfiguration()    
-    .ResolveDependencies();
+        // Add services to the container.
 
-var app = builder.Build();
+        builder.Services.AddControllers();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
+        var app = builder.Build();
 
-app.AddSwagger();
+        app.AddSwagger();
 
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
+        app.UseHttpsRedirection();
 
-app.MapControllers();
-app.ApplyMigrations();
+        app.UseAuthorization();
 
-app.Run();
+        app.MapControllers();
+        app.ApplyMigrations();
+
+        app.Run();
+    }
+}
