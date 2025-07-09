@@ -36,7 +36,8 @@ A estrutura do projeto é organizada da seguinte forma:
 
 
 - src/
-  - PlataformaEducacao.Core/ - Contém todas as definições comuns aos deomínios compartilhados.
+  - EventSourcing/ - Meios para utilizar o EventStore para armazenamento dos eventos 
+  - PlataformaEducacao.Core/ - Contém todas as definições comuns aos deomínios compartilhados
   - PlataformaEducacao.Gestao.Application/ - Commands, CommandHandler do Bounded Context Gestao
   - PlataformaEducacao.Gestao.Data / Todo acesso a dados do Bounded Context Gestao
   - PlataformaEducacao.Gestao.Domain / Entidades de domínio do Bounded Context Gestao
@@ -71,6 +72,7 @@ A estrutura do projeto é organizada da seguinte forma:
 - SQLite
 - Visual Studio 2022 ou superior (ou qualquer IDE de sua preferência)
 - Git
+- Docker
 
 ### **Passos para Execução**
 
@@ -89,7 +91,10 @@ A estrutura do projeto é organizada da seguinte forma:
        - login: alunointeligente@teste.com
        - senha: 12345678
 
-3. **Executar a API:**
+3. **Configuração do Event Store**
+   - Na pasta raiz do projeto, abra o prompt de comando de sua preferência e execute o comando **docker-compose up**.       
+
+4. **Executar a API:**
    - `cd src/PlataformaEducacao.WebApps.WebApi/`
    - `dotnet run`
    - Acesse a documentação da API em: http://localhost:7103/swagger
