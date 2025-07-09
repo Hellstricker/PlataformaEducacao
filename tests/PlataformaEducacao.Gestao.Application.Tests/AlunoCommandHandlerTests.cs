@@ -92,7 +92,7 @@ namespace PlataformaEducacao.Gestao.Application.Tests
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.UnitOfWork.CommitAsync()).Returns(Task.FromResult(true));
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.ObterPorIdAsync(aluno.Id)).ReturnsAsync(aluno);
             await _handler.Handle(command, CancellationToken.None);            
-            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId);
+            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId, aluno.Nome, "1234567812344548", "12/29", "123");
 
             // Act
             var result = await _handler.Handle(commandPagar, CancellationToken.None);
@@ -113,7 +113,7 @@ namespace PlataformaEducacao.Gestao.Application.Tests
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.UnitOfWork.CommitAsync()).Returns(Task.FromResult(true));
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.ObterPorIdAsync(aluno.Id)).ReturnsAsync(aluno);
             await _handler.Handle(command, CancellationToken.None);
-            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId);
+            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId, aluno.Nome, "1234567812344548", "12/29", "123");
             await _handler.Handle(commandPagar, CancellationToken.None);
             var commandFinalizarAula = new AlunoFinalizarAulaCommand(command.AlunoId, command.CursoId, Guid.NewGuid());
             
@@ -135,7 +135,7 @@ namespace PlataformaEducacao.Gestao.Application.Tests
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.UnitOfWork.CommitAsync()).Returns(Task.FromResult(true));
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.ObterPorIdAsync(aluno.Id)).ReturnsAsync(aluno);
             await _handler.Handle(command, CancellationToken.None);
-            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId);
+            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId, aluno.Nome, "1234567812344548", "12/29", "123");
             await _handler.Handle(commandPagar, CancellationToken.None);
             var commandFinalizarAula = new AlunoFinalizarAulaCommand(command.AlunoId, command.CursoId, Guid.NewGuid());
             await _handler.Handle(commandFinalizarAula, CancellationToken.None);
@@ -160,7 +160,7 @@ namespace PlataformaEducacao.Gestao.Application.Tests
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.UnitOfWork.CommitAsync()).Returns(Task.FromResult(true));
             _mocker.GetMock<IAlunoRepository>().Setup(repo => repo.ObterPorIdAsync(aluno.Id)).ReturnsAsync(aluno);
             await _handler.Handle(command, CancellationToken.None);
-            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId);
+            var commandPagar = new AlunoPagarMatriculaCommand(command.AlunoId, command.CursoId, aluno.Nome, "1234567812344548", "12/29", "123");
             await _handler.Handle(commandPagar, CancellationToken.None);
             var commandFinalizarAula = new AlunoFinalizarAulaCommand(command.AlunoId, command.CursoId, Guid.NewGuid());
             await _handler.Handle(commandFinalizarAula, CancellationToken.None);

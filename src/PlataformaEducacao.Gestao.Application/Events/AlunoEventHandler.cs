@@ -10,8 +10,8 @@ namespace PlataformaEducacao.Gestao.Application.Events
     public class AlunoEventHandler :
         INotificationHandler<PagamentoRealizadoEvent>,
         INotificationHandler<PagamentoRecusadoEvent>,
-        INotificationHandler<AulaFinalizadaEvent>,
-        INotificationHandler<MatriculaFinalizadaEvent>
+        INotificationHandler<AlunoAulaFinalizadaEvent>,
+        INotificationHandler<AlunoMatriculaFinalizadaEvent>
     {        
         private readonly IMediatorHandler _mediatorHandler;
 
@@ -24,25 +24,25 @@ namespace PlataformaEducacao.Gestao.Application.Events
 
         public async Task Handle(PagamentoRealizadoEvent notification, CancellationToken cancellationToken)
         {
-            var command = new AlunoPagarMatriculaCommand(notification.AlunoId, notification.CursoId);
-            await _mediatorHandler.PublicarCommand(command);
+            await Task.CompletedTask;
         }
 
         public async Task Handle(PagamentoRecusadoEvent notification, CancellationToken cancellationToken)
         {
-            await Task.CompletedTask;
+            var command = new AlunoPagamentoRejeitadoCommand(notification.AlunoId, notification.CursoId);
+            await _mediatorHandler.EnviarCommand(command);
         }
 
-        public async Task Handle(AulaFinalizadaEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(AlunoAulaFinalizadaEvent notification, CancellationToken cancellationToken)
         {
             var command = new AlunoFinalizarMatriculaCommand(notification.AlunoId, notification.CursoId);
-            await _mediatorHandler.PublicarCommand(command);
+            await _mediatorHandler.EnviarCommand(command);
         }
 
-        public async Task Handle(MatriculaFinalizadaEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(AlunoMatriculaFinalizadaEvent notification, CancellationToken cancellationToken)
         {
             var command = new AlunoGerarCertificadoCommand(notification.AlunoId, notification.CursoId);
-            await _mediatorHandler.PublicarCommand(command);
+            await _mediatorHandler.EnviarCommand(command);
         }
     }
 }

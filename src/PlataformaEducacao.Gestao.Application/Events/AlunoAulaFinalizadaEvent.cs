@@ -1,16 +1,18 @@
-﻿using PlataformaEducacao.Core.Messages.IntegrationEvents;
+﻿using PlataformaEducacao.Core.Messages;
+using PlataformaEducacao.Core.Messages.DomainEvents;
+using PlataformaEducacao.Core.Messages.IntegrationEvents;
 
 namespace PlataformaEducacao.Gestao.Application.Events
 {
-    public class AulaFinalizadaEvent : IntegrationEvent
+    public class AlunoAulaFinalizadaEvent : Event
     {
         public Guid AlunoId { get; private set; }
         public Guid CursoId { get; private set; }
         public Guid AulaId { get; private set; }
         public int TotalAulasCurso { get; private set; }
         public decimal Progresso { get; private set; }
-        public AulaFinalizadaEvent(Guid alunoId, Guid cursoId, Guid aulaId, int totalAulasCurso, decimal progresso)
-        {
+        public AlunoAulaFinalizadaEvent(Guid alunoId, Guid cursoId, Guid aulaId, int totalAulasCurso, decimal progresso)            
+        {            
             AggregateId = alunoId;
             AlunoId = alunoId;
             CursoId = cursoId;

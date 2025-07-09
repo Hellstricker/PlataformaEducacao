@@ -1,10 +1,12 @@
-﻿using MediatR;
+﻿using EventSourcing;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using PlataformaEducacao.Cadastros.Application.Services;
 using PlataformaEducacao.Cadastros.Data;
 using PlataformaEducacao.Cadastros.Data.Repositories;
 using PlataformaEducacao.Cadastros.Domain;
 using PlataformaEducacao.Core.Communications.Mediators;
+using PlataformaEducacao.Core.Data.EventSourcing;
 using PlataformaEducacao.Core.Interfaces;
 using PlataformaEducacao.Core.Messages.IntegrationEvents;
 using PlataformaEducacao.Core.Messages.Notifications;
@@ -64,10 +66,10 @@ namespace PlataformaEducacao.WebApps.WebApi.Configurations
             builder.Services.AddScoped<IRequestHandler<AlunoGerarCertificadoCommand, bool>, AlunoCommandHandler>();
 
             //Events
-            builder.Services.AddScoped<INotificationHandler<AlunoCadastradoEvent>, UsuarioEventHandler>();
+            builder.Services.AddScoped<INotificationHandler<AlunoCadastroRealizadoEvent>, UsuarioEventHandler>();
             builder.Services.AddScoped<INotificationHandler<PagamentoRealizadoEvent>, AlunoEventHandler>();
-            builder.Services.AddScoped<INotificationHandler<AulaFinalizadaEvent>, AlunoEventHandler>();
-            builder.Services.AddScoped<INotificationHandler<MatriculaFinalizadaEvent>, AlunoEventHandler>();
+            builder.Services.AddScoped<INotificationHandler<AlunoAulaFinalizadaEvent>, AlunoEventHandler>();
+            builder.Services.AddScoped<INotificationHandler<AlunoMatriculaFinalizadaEvent>, AlunoEventHandler>();
 
             //Pagamentos
             builder.Services.AddScoped<IPagamentoRepository, PagamentoRepository>();
@@ -76,6 +78,11 @@ namespace PlataformaEducacao.WebApps.WebApi.Configurations
             builder.Services.AddScoped<IPaypalGateway, PaypalGateway>();
             builder.Services.AddScoped<Pagamentos.AntiCorruption.IConfigurationManager, Pagamentos.AntiCorruption.ConfigurationManager>();
             builder.Services.AddScoped<PagamentosContext>();
+
+            
+            //EventSouring
+            builder.Services.AddSingleton<IEventStoreService, EventStoreService>();
+            builder.Services.AddSingleton<IEventSourcingRepository, EventSourcingRepository>();
 
             return builder;
         }

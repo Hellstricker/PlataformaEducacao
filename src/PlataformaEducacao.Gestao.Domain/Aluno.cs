@@ -101,6 +101,12 @@ namespace PlataformaEducacao.Gestao.Domain
             if (matricula.NaoEstaFinalizada()) return null;
             return matricula;
         }
+
+        public void CancelarPagamentoMatricula(Guid cursoId)
+        {
+            var matricula = ObterMatricula(cursoId);
+            matricula.CancelarPagamento();
+        }
     }
 
     public class Certificado : Entity

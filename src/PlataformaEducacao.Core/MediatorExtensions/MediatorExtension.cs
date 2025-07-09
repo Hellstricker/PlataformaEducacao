@@ -9,29 +9,21 @@ namespace PlataformaEducacao.Core.MediatorExtensions
 
         public static async Task PublicarEventos(this IMediatorHandler mediator, DbContext context)
         {
-            var a = context.ChangeTracker
-                .Entries<Entity>();
-
-            foreach (var s in a)
-            {
-                Console.WriteLine(s.Entity.Notificacoes.Any());
-            }
-
             var domainEntities = context.ChangeTracker
                 .Entries<Entity>()
                 .Where(x => x.Entity.Notificacoes != null && x.Entity.Notificacoes.Any())
                 .Select(x => x.Entity);
 
-            var domainEvents = domainEntities
+            var events = domainEntities
                 .SelectMany(x => x.Notificacoes)
                 .ToList();
 
             domainEntities.ToList().ForEach(x => x.LimparEventos());
 
-            var tasks = domainEvents
-                .Select(async (domainEvent) =>
+            var tasks = events
+                .Select(async (evento) =>
                 {
-                    await mediator.PublicarEvento(domainEvent);
+                    await mediator.PublicarEvento(evento);
                 });
 
             await Task.WhenAll(tasks);

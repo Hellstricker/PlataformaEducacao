@@ -2,6 +2,7 @@
 using PlataformaEducacao.Cadastros.Application.ViewModels;
 using PlataformaEducacao.Cadastros.Domain;
 using PlataformaEducacao.Cadastros.Domain.Events;
+using PlataformaEducacao.Core.Communications.Mediators;
 using PlataformaEducacao.Core.Messages.Notifications;
 using PlataformaEducacao.Core.ViewModelValidationHelpers;
 
@@ -12,12 +13,12 @@ namespace PlataformaEducacao.Cadastros.Application.Services
         public const string CursoNaoEncontrado = "Curso não encontrado.";
 
         private readonly ICursoRepository _cursoRepository;
-        private readonly IMediator _mediator;
+        private readonly IMediatorHandler _mediatorHandler;
 
-        public CursoApplicationService(ICursoRepository cursoRepository, IMediator mediator)
+        public CursoApplicationService(ICursoRepository cursoRepository, IMediatorHandler mediator)
         {
             _cursoRepository = cursoRepository;
-            _mediator = mediator;
+            _mediatorHandler = mediator;
         }
 
         public async Task<bool> AdicionarCurso(CursoViewModel cursoViewModel)
@@ -28,7 +29,7 @@ namespace PlataformaEducacao.Cadastros.Application.Services
 
             _cursoRepository.Adicionar(curso);
 
-            curso.AdicionarEvento(new CursoCadastradoEvent(cursoViewModel.Titulo!, cursoViewModel.Valor, cursoViewModel.Descricao!, cursoViewModel.CargaHoraria));
+            curso.AdicionarEvento(new CursoCadastradoEvent(curso.Id, cursoViewModel.Titulo!, cursoViewModel.Valor, cursoViewModel.Descricao!, cursoViewModel.CargaHoraria));
 
             return await _cursoRepository.UnitOfWork.CommitAsync();
         }
@@ -58,14 +59,14 @@ namespace PlataformaEducacao.Cadastros.Application.Services
         private async Task<bool> AulaExcedeCargaHorariaCurso(Curso curso, Aula aula)
         {
             if (!curso.AulaExcedeCargaHoraria(aula.Duracao)) return false;
-            await _mediator.Publish(new DomainNotification(nameof(CursoApplicationService.AdicionarAula), Curso.AdicionarAulaUltrapassaCargaHoraria), CancellationToken.None);
+            await _mediatorHandler.PublicarNotificacao(new DomainNotification(nameof(CursoApplicationService.AdicionarAula), Curso.AdicionarAulaUltrapassaCargaHoraria));
             return true;
         }
 
         private async Task<bool> AulaComMesmoTitulo(Curso curso, Aula aula)
         {
             if (!curso.ExisteAulaComMesmoTitulo(aula.Titulo)) return false;
-            await _mediator.Publish(new DomainNotification(nameof(CursoApplicationService.AdicionarAula), Curso.AulaJaExiste + $" '{aula.Titulo}'."), CancellationToken.None);
+            await _mediatorHandler.PublicarNotificacao(new DomainNotification(nameof(CursoApplicationService.AdicionarAula), Curso.AulaJaExiste + $" '{aula.Titulo}'."));
             return true;
         }
 
@@ -73,7 +74,7 @@ namespace PlataformaEducacao.Cadastros.Application.Services
         {
             var curso = await _cursoRepository.ObterPorIdAsync(cursoId);
             if (curso == null)
-                await _mediator.Publish(new DomainNotification(this.GetType().Name, CursoNaoEncontrado));
+                await _mediatorHandler.PublicarNotificacao(new DomainNotification(this.GetType().Name, CursoNaoEncontrado));
             return curso;
         }
 
@@ -85,7 +86,7 @@ namespace PlataformaEducacao.Cadastros.Application.Services
 
             foreach (var error in validationResults)
             {
-                await _mediator.Publish(new DomainNotification(error.MemberNames.First(), error.ErrorMessage!));
+                await _mediatorHandler.PublicarNotificacao(new DomainNotification(error.MemberNames.First(), error.ErrorMessage!));
             }
             return false;
         }

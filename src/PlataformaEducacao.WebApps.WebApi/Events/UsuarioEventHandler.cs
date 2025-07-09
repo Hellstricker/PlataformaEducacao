@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Identity;
 using PlataformaEducacao.Core.Communications.Mediators;
 using PlataformaEducacao.Core.Messages.IntegrationEvents;
 using PlataformaEducacao.Core.Messages.Notifications;
+using PlataformaEducacao.Gestao.Application.Events;
 using PlataformaEducacao.WebApps.WebApi.Enums;
 using PlataformaEducacao.WebApps.WebApi.Extensions.String;
 
 namespace PlataformaEducacao.WebApps.WebApi.Events
 {
-    public class UsuarioEventHandler:INotificationHandler<AlunoCadastradoEvent>
+    public class UsuarioEventHandler:INotificationHandler<AlunoCadastroRealizadoEvent>
     {
         protected readonly UserManager<IdentityUser<Guid>> _userManager;
         protected readonly IMediatorHandler _mediatorHandler;
@@ -24,7 +25,7 @@ namespace PlataformaEducacao.WebApps.WebApi.Events
             _roleManager = roleManager;
         }
 
-        public async Task Handle(AlunoCadastradoEvent notification, CancellationToken cancellationToken)
+        public async Task Handle(AlunoCadastroRealizadoEvent notification, CancellationToken cancellationToken)
         {
 
             var user = new IdentityUser<Guid>()

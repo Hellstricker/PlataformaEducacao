@@ -2,6 +2,6 @@
 {
     public interface IPagamentoCartaoCreditoFacade
     {
-        Transacao RealizarPagamento(Matricula matricula, Pagamento pagamento);
+        Transacao RealizarPagamento(Curso matricula, Pagamento pagamento);
     }
 }

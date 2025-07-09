@@ -11,7 +11,7 @@ namespace PlataformaEducacao.Pagamentos.AntiCorruption
             _paypalGateway = paypalGateway;
             _configurationManager = configurationManager;
         }
-        public Transacao RealizarPagamento(Matricula matricula, Pagamento pagamento)
+        public Transacao RealizarPagamento(Curso curso, Pagamento pagamento)
         {
             var apiKey = _configurationManager.GetValue("apiKey");
             var encriptionKey = _configurationManager.GetValue("encriptionKey");
@@ -19,7 +19,7 @@ namespace PlataformaEducacao.Pagamentos.AntiCorruption
             var serviceKey = _paypalGateway.GetPaypalServiceKey(apiKey, encriptionKey);
             var cardHashKey = _paypalGateway.GetCardHashKey(serviceKey, pagamento.DadosCartao.ToString());
 
-            return _paypalGateway.CommitTransaction(cardHashKey, matricula.Id.ToString(), pagamento.Id.ToString(), pagamento.Valor);
+            return _paypalGateway.CommitTransaction(cardHashKey, curso.Id.ToString(), pagamento.Id.ToString(), pagamento.Valor);
         }
     }
 }

@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EventSourcing\EventSourcing.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.Cadastros.Application\PlataformaEducacao.Cadastros.Application.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.Cadastros.Data\PlataformaEducacao.Cadastros.Data.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.Core\PlataformaEducacao.Core.csproj" />

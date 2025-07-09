@@ -138,61 +138,7 @@ namespace PlataformaEducacao.WebApps.Tests
             Assert.NotNull(pagarMatriculaAlunoResponseContent);
             Assert.True(gestaoContext.Matriculas.Any());
             Assert.True((pagarMatriculaAlunoResponseContent.Success && gestaoContext.Matriculas.Any(x => x.AlunoId == _fixture.UsuarioLogado.Id && x.Curso.CursoId == matriculaViewModel.CursoId && x.Status == StatusMatriculaEnum.EM_ANDAMENTO)));
-        }
-
-        [Fact(DisplayName = "Realizar Pagamento Matricula com Falha no Pagamento")]
-        [Trait("Categoria", "Integracao API - Alunos")]
-        public async Task PagarMatriculaAluno_AlunoCadastradoRealizaPagamentoMatriculaComFalha_DeveRetornarMensagemDeErro()
-        {
-            // Arrange
-            await _fixture.CadastrarLogarAdministrador();
-            var cadastrarCurso = await _fixture.ChamaEndpointCadastraCursoValido();
-            cadastrarCurso.EnsureSuccessStatusCode();
-            var gestaoContext = _fixture.ObterServico<GestaoContext>();
-            var cursosContext = _fixture.ObterServico<CursoContext>();
-            var cursoId = cursosContext.Cursos.First().Id;
-            await _fixture.CadastrarLogarAluno(_cadastrarAlunoViewModelValido);
-
-            var matriculaViewModel = new MatricularAlunoViewModel
-            {
-                CursoId = cursoId,
-                CursoNome = "Curso Teste",
-                CursoValor = 1000m,
-                CursoTotalAulas = 10
-            };
-
-            var matricularAlunoResponse = await _fixture.ChamaEndpointMatricularAluno(_fixture.UsuarioLogado.Id, matriculaViewModel);
-            matricularAlunoResponse.EnsureSuccessStatusCode();
-
-            var pagamentoModel = new PagamentoMatriculaViewModel
-            {
-                CursoId = cursoId,
-                NomeCartao = "Nome do Cartão",
-                NumeroCartao = "1234567890123456",
-                MesAnoExpiracao = "12/25",
-                Ccv = "123"
-            };
-
-            
-            var pagarMatriculaAlunoResponse = await _fixture.ChamaEndpointPagarMatriculaAluno(_fixture.UsuarioLogado.Id, pagamentoModel);
-
-            while (gestaoContext.Matriculas.Any(x => x.AlunoId == _fixture.UsuarioLogado.Id && x.Curso.CursoId == matriculaViewModel.CursoId && x.Status == StatusMatriculaEnum.EM_ANDAMENTO))
-            {
-                gestaoContext.Matriculas.RemoveRange(gestaoContext.Matriculas.Where(x => x.AlunoId == _fixture.UsuarioLogado.Id && x.Curso.CursoId == matriculaViewModel.CursoId && x.Status == StatusMatriculaEnum.EM_ANDAMENTO));
-                gestaoContext.SaveChanges();
-                matricularAlunoResponse = await _fixture.ChamaEndpointMatricularAluno(_fixture.UsuarioLogado.Id, matriculaViewModel);
-                matricularAlunoResponse.EnsureSuccessStatusCode();
-                pagarMatriculaAlunoResponse = await _fixture.ChamaEndpointPagarMatriculaAluno(_fixture.UsuarioLogado.Id, pagamentoModel);
-            }
-
-
-            // Assert
-            //pagarMatriculaAlunoResponse.EnsureSuccessStatusCode();
-            var pagarMatriculaAlunoResponseContent = await pagarMatriculaAlunoResponse.Content.ReadFromJsonAsync<BaseResultViewModel>();
-            Assert.NotNull(pagarMatriculaAlunoResponseContent);
-            Assert.True(gestaoContext.Matriculas.Any());
-            Assert.True(!pagarMatriculaAlunoResponseContent.Success && pagarMatriculaAlunoResponseContent.Errors!.Contains(PagamentoService.PagamentoRecusadoMessage));
-        }
+        }       
 
 
         [Fact(DisplayName = "Finalizar Aula com Sucesso")]

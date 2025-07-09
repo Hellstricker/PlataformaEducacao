@@ -1,6 +1,7 @@
 ﻿using PlataformaEducacao.Gestao.Application.Commands;
 using PlataformaEducacao.Gestao.Application.Commands.Validations;
 using PlataformaEducacao.Gestao.Application.Tests.Configs;
+using PlataformaEducacao.Gestao.Domain;
 
 
 namespace PlataformaEducacao.Gestao.Application.Tests
@@ -82,7 +83,7 @@ namespace PlataformaEducacao.Gestao.Application.Tests
         public void AlunoPagarMatriculaCommand_ComandoValido_NaoDeveRetornarErro()
         {
             // Arrange
-            var command = new AlunoPagarMatriculaCommand(Guid.NewGuid(), Guid.NewGuid());
+            var command = new AlunoPagarMatriculaCommand(Guid.NewGuid(), Guid.NewGuid(), "Maria Joaquina", "1256548748955412", "12/29","123");
 
             // Act
             var result = command.EhValido();

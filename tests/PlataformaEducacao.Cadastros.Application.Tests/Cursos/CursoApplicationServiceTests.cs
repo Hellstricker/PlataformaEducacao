@@ -4,8 +4,10 @@ using Moq.AutoMock;
 using PlataformaEducacao.Cadastros.Application.Services;
 using PlataformaEducacao.Cadastros.Application.ViewModels;
 using PlataformaEducacao.Cadastros.Domain;
+using PlataformaEducacao.Core.Communications.Mediators;
 using PlataformaEducacao.Core.Data;
 using PlataformaEducacao.Core.DomainObjects;
+using PlataformaEducacao.Core.Messages.Notifications;
 
 namespace PlataformaEducacao.Cadastros.Application.Tests.Cursos
 {
@@ -63,7 +65,7 @@ namespace PlataformaEducacao.Cadastros.Application.Tests.Cursos
 
             // Assert            
             Assert.False(result);
-            _mocker.GetMock<IMediator>().Verify(not => not.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Exactly(4));
+            _mocker.GetMock<IMediatorHandler>().Verify(not => not.PublicarNotificacao(It.IsAny<DomainNotification>()), Times.Exactly(4));            
         }
 
         [Fact(DisplayName = "Adicionar Aula Valida")]
@@ -110,8 +112,8 @@ namespace PlataformaEducacao.Cadastros.Application.Tests.Cursos
             var result = await _cursoApplicationService.AdicionarAula(aulaViewModel);
 
             // Assert
-            Assert.False(result);
-            _mocker.GetMock<IMediator>().Verify(not => not.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Exactly(4));    
+            Assert.False(result);            
+            _mocker.GetMock<IMediatorHandler>().Verify(not => not.PublicarNotificacao(It.IsAny<DomainNotification>()), Times.Exactly(4));
         }        
 
         [Fact(DisplayName = "Adicionar Aula Com Curso Inexistente")]
@@ -131,8 +133,8 @@ namespace PlataformaEducacao.Cadastros.Application.Tests.Cursos
             var result = await _cursoApplicationService.AdicionarAula(aulaViewModel);
 
             // Assert
-            Assert.False(result);
-            _mocker.GetMock<IMediator>().Verify(not => not.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Once);
+            Assert.False(result);            
+            _mocker.GetMock<IMediatorHandler>().Verify(not => not.PublicarNotificacao(It.IsAny<DomainNotification>()), Times.Once);
         }        
 
         [Fact(DisplayName = "Adicionar Aula Valida Duas Vezes")]
@@ -158,8 +160,8 @@ namespace PlataformaEducacao.Cadastros.Application.Tests.Cursos
             var result = await _cursoApplicationService.AdicionarAula(aulaViewModel);
 
             // Assert
-            Assert.False(result);
-            _mocker.GetMock<IMediator>().Verify(not => not.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Once);
+            Assert.False(result);            
+            _mocker.GetMock<IMediatorHandler>().Verify(not => not.PublicarNotificacao(It.IsAny<DomainNotification>()), Times.Once);
         }
 
         [Fact(DisplayName = "Adicionar Aula Excede Carga Horaria")]
@@ -194,8 +196,8 @@ namespace PlataformaEducacao.Cadastros.Application.Tests.Cursos
             var result = await _cursoApplicationService.AdicionarAula(aulaViewModel2);
 
             // Assert
-            Assert.False(result);
-            _mocker.GetMock<IMediator>().Verify(not => not.Publish(It.IsAny<INotification>(), CancellationToken.None), Times.Once);
+            Assert.False(result);            
+            _mocker.GetMock<IMediatorHandler>().Verify(not => not.PublicarNotificacao(It.IsAny<DomainNotification>()), Times.Once);
         }
     }
 }

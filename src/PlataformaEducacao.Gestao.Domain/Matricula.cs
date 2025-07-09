@@ -9,6 +9,7 @@ namespace PlataformaEducacao.Gestao.Domain
         public const int MAX_NOMECURSO_CHAR = 150;
         public const string MatriculaNaoEstaPendente = "Matricula não está pendente de pagamento.";
         public const string MatriculaNaoEstaEmAndamento = "Matricula não está em andamento";
+        public const string MatriculaNaoEstaPaga = "Matricula não foi paga";
 
         public Guid AlunoId { get; private set; }
         public CursoMatriculado Curso { get; private set; }
@@ -75,6 +76,12 @@ namespace PlataformaEducacao.Gestao.Domain
                 Status = StatusMatriculaEnum.CONCLUIDA;
         }
 
+        internal void CancelarPagamento()
+        {
+            if (EstaPaga())
+                Status = StatusMatriculaEnum.PENDENTE_PAGAMENTO;
+        }
+
         internal bool EstaFinalizada()
         {
             return Status == StatusMatriculaEnum.CONCLUIDA;
@@ -83,6 +90,11 @@ namespace PlataformaEducacao.Gestao.Domain
         internal bool NaoEstaFinalizada()
         {
             return !EstaFinalizada();
+        }
+
+        public bool EstaPaga()
+        {
+            return Status == StatusMatriculaEnum.EM_ANDAMENTO;
         }
 
         public static class MariculaFactory

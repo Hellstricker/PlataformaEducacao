@@ -14,7 +14,8 @@ namespace PlataformaEducacao.Gestao.Application.Commands
         IRequestHandler<AlunoPagarMatriculaCommand, bool>,
         IRequestHandler<AlunoFinalizarAulaCommand, bool>,
         IRequestHandler<AlunoFinalizarMatriculaCommand, bool>,
-        IRequestHandler<AlunoGerarCertificadoCommand, bool>
+        IRequestHandler<AlunoGerarCertificadoCommand, bool>,
+        IRequestHandler<AlunoPagamentoRejeitadoCommand, bool>
     {
         private readonly IAlunoRepository _alunoRepository;
         private readonly IMediatorHandler _mediatorHandler;
@@ -29,7 +30,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if (!ValidarComando(message)) return false;
             var aluno = new Aluno(message.Nome, message.Email);
             _alunoRepository.Adicionar(aluno);
-            aluno.AdicionarEvento(new AlunoCadastradoEvent(aluno.Id, aluno.Nome, aluno.Email, message.Senha, message.ConfirmacaoSenha));            
+            aluno.AdicionarEvento(new AlunoCadastroRealizadoEvent(aluno.Id, aluno.Nome, aluno.Email, message.Senha, message.ConfirmacaoSenha));
             return await _alunoRepository.UnitOfWork.CommitAsync();
         }
 
@@ -39,11 +40,12 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             var matricula = new Matricula(message.AlunoId, message.CursoId, message.CursoNome, message.CursoValor, message.CursoTotalAulas);
             var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
 
-            if (!await ValidarAluno(aluno)) return false;
+            if (!await ValidarSeAlunoExiste(aluno)) return false;
 
             if (!await ValidarSeAlunoNaoEstaMatriculado(aluno, message.CursoId)) return false;
             
             aluno.Matricular(matricula);
+            aluno.AdicionarEvento(new AlunoMatriculaRealizadaEvent(message.AlunoId, message.CursoId, message.CursoNome, message.CursoValor, message.CursoTotalAulas));
 
             _alunoRepository.Adicionar(matricula);
             return await _alunoRepository.UnitOfWork.CommitAsync();
@@ -54,7 +56,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if (!ValidarComando(message)) return false;
             var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
 
-            if (!await ValidarAluno(aluno)) return false;
+            if (!await ValidarSeAlunoExiste(aluno)) return false;
 
             if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
 
@@ -62,7 +64,27 @@ namespace PlataformaEducacao.Gestao.Application.Commands
 
             if(!await ValidarSeMatriculaPodeSerPaga(matricula)) return false;                
 
-            aluno.PagarMatricula(message.CursoId);            
+            aluno.PagarMatricula(message.CursoId);
+            aluno.AdicionarEvento(new AlunoPagouMatriculaEvent(matricula.AlunoId, message.CursoId,matricula.Curso.CursoValor, message.NomeCartao, message.NumeroCartao, message.MesAnoExpiracao, message.Ccv));
+            _alunoRepository.Atualizar(matricula);
+            return await _alunoRepository.UnitOfWork.CommitAsync();
+        }
+
+        public async Task<bool> Handle(AlunoPagamentoRejeitadoCommand message, CancellationToken cancellationToken)
+        {
+            if (!ValidarComando(message)) return false;
+            var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
+
+            if (!await ValidarSeAlunoExiste(aluno)) return false;
+
+            if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
+
+            var matricula = aluno.ObterMatricula(message.CursoId);
+
+            if (!await ValidarSeMatriculaTerPagamentoCancelado(matricula)) return false;
+
+            aluno.CancelarPagamentoMatricula(message.CursoId);
+            aluno.AdicionarEvento(new AlunoPagamentoCanceladoEvent(matricula.AlunoId, message.CursoId, matricula.Curso.CursoValor));
             _alunoRepository.Atualizar(matricula);
             return await _alunoRepository.UnitOfWork.CommitAsync();
         }
@@ -72,7 +94,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if(!ValidarComando(message))return false;
             var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
 
-            if (!await ValidarAluno(aluno)) return false;
+            if (!await ValidarSeAlunoExiste(aluno)) return false;
 
             if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
 
@@ -81,7 +103,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if (!await ValidarSeMatriculaPodeFinalizarAula(matricula)) return false;
 
             aluno.FinalizarAula(message.CursoId, message.AulaId);            
-            matricula.AdicionarEvento(new AulaFinalizadaEvent(aluno.Id, message.CursoId, message.AulaId, matricula.Curso.CursoTotalAulas, matricula.Curso.HistoricoAprendizado!.Progresso!.Value));
+            matricula.AdicionarEvento(new AlunoAulaFinalizadaEvent(aluno.Id, message.CursoId, message.AulaId, matricula.Curso.CursoTotalAulas, matricula.Curso.HistoricoAprendizado!.Progresso!.Value));
             _alunoRepository.Atualizar(matricula);            
             return await _alunoRepository.UnitOfWork.CommitAsync();
         }
@@ -91,7 +113,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if (!ValidarComando(message)) return false;
             var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
 
-            if (!await ValidarAluno(aluno)) return false;
+            if (!await ValidarSeAlunoExiste(aluno)) return false;
 
             if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
 
@@ -100,7 +122,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if(matricula == null) return false;
 
             aluno.FinalizarMatricula(message.CursoId);
-            matricula.AdicionarEvento(new MatriculaFinalizadaEvent(aluno.Id, message.CursoId));
+            matricula.AdicionarEvento(new AlunoMatriculaFinalizadaEvent(aluno.Id, message.CursoId));
             _alunoRepository.Atualizar(matricula);
             return await _alunoRepository.UnitOfWork.CommitAsync();
         }
@@ -110,7 +132,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if (!ValidarComando(message)) return false;
             var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
 
-            if (!await ValidarAluno(aluno)) return false;
+            if (!await ValidarSeAlunoExiste(aluno)) return false;
 
             if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
 
@@ -120,7 +142,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
 
             aluno.GerarCertificado(message.CursoId);
             var certificado = aluno.Certificados.First(c => c.NomeCurso == matricula.Curso.CursoNome);
-            certificado.AdicionarEvento(new CertificadoGeradoEvent(certificado.AlunoId, certificado.NumeroCertificado, certificado.NomeCurso, certificado.DataCadastro ));
+            certificado.AdicionarEvento(new AlunoCertificadoGeradoEvent(certificado.AlunoId, certificado.NumeroCertificado, certificado.NomeCurso, certificado.DataCadastro ));
             _alunoRepository.Adicionar(certificado);
             return await _alunoRepository.UnitOfWork.CommitAsync();
         }
@@ -134,6 +156,10 @@ namespace PlataformaEducacao.Gestao.Application.Commands
         private async Task<bool> ValidarSeMatriculaPodeSerPaga(Matricula matricula)
         {
             return await Validar(matricula.PodeSerPaga(), Matricula.MatriculaNaoEstaPendente);
+        }
+        private async Task<bool> ValidarSeMatriculaTerPagamentoCancelado(Matricula matricula)
+        {
+            return await Validar(matricula.EstaPaga(), Matricula.MatriculaNaoEstaPaga);
         }
         private async Task<bool> ValidarSeAlunoEstaMatriculado(Aluno aluno, Guid cursoId)
         {
@@ -152,7 +178,7 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             }
             return true;
         }
-        private async Task<bool> ValidarAluno(Aluno aluno)
+        private async Task<bool> ValidarSeAlunoExiste(Aluno aluno)
         {
             if (aluno == null)
             {

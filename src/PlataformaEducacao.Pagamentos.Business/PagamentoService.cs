@@ -24,7 +24,7 @@ namespace PlataformaEducacao.Pagamentos.Business
         }
         public async Task<Transacao> RealizarPagamentoCurso(PagamentoMatriculaDto pagamentoMatricula)
         {
-            var matricula = new Matricula
+            var curso = new Curso
             {
                 Id = pagamentoMatricula.CursoId,
                 Valor = pagamentoMatricula.Valor
@@ -32,7 +32,8 @@ namespace PlataformaEducacao.Pagamentos.Business
 
             var pagamento = new Pagamento
             {
-                MatriculaId = pagamentoMatricula.MatriculaId,
+                AlunoId = pagamentoMatricula.AlunoId,
+                CursoId = pagamentoMatricula.CursoId,
                 Valor = pagamentoMatricula.Valor,
                 DadosCartao = new DadosCartao
                 {
@@ -43,11 +44,11 @@ namespace PlataformaEducacao.Pagamentos.Business
                 }
             };
 
-            var transacao = _pagamentoCartaoCreditoFacade.RealizarPagamento(matricula, pagamento);
+            var transacao = _pagamentoCartaoCreditoFacade.RealizarPagamento(curso, pagamento);
 
             if (transacao.StatusTransacao == StatusTransacao.Pago)
             {
-                pagamento.AdicionarEvento(new PagamentoRealizadoEvent(pagamento.MatriculaId, pagamentoMatricula.CursoId, pagamentoMatricula.AlunoId, pagamento.Id, transacao.Id, pagamentoMatricula.Valor));
+                pagamento.AdicionarEvento(new PagamentoRealizadoEvent(pagamentoMatricula.AlunoId, pagamentoMatricula.CursoId, pagamento.Id, transacao.Id, pagamentoMatricula.Valor));
                 pagamento.Status = transacao.StatusTransacao.ToString();
                 _pagamentoRepository.Adicionar(pagamento);
                 _pagamentoRepository.Adicionar(transacao);
@@ -55,7 +56,7 @@ namespace PlataformaEducacao.Pagamentos.Business
                 return transacao;
             }
             await _mediatorHandler.PublicarNotificacao(new DomainNotification("Pagamento", PagamentoRecusadoMessage));
-            await _mediatorHandler.PublicarEvento(new PagamentoRecusadoEvent(pagamentoMatricula.MatriculaId, pagamentoMatricula.CursoId, pagamentoMatricula.AlunoId, pagamento.Id, transacao.Id, pagamentoMatricula.Valor));
+            await _mediatorHandler.PublicarEvento(new PagamentoRecusadoEvent(pagamentoMatricula.AlunoId, pagamentoMatricula.CursoId, pagamento.Id, transacao.Id, pagamentoMatricula.Valor));
             return transacao;
         }
     }

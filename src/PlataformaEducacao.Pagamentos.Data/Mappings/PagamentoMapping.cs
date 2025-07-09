@@ -10,7 +10,10 @@ namespace PlataformaEducacao.Pagamentos.Data.Mappings
         {
             builder.ToTable("Pagamentos");
             builder.HasKey(p => p.Id);
-            builder.Property(p => p.MatriculaId)
+            builder.Property(p => p.AlunoId)
+                .IsRequired()
+                .HasColumnType("uniqueidentifier");
+            builder.Property(p => p.CursoId)
                 .IsRequired()
                 .HasColumnType("uniqueidentifier");
             builder.Property(p => p.Valor)

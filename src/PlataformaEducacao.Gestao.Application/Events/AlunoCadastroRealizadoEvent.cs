@@ -1,15 +1,15 @@
 ﻿using PlataformaEducacao.Core.Messages;
 
-namespace PlataformaEducacao.Core.Messages.IntegrationEvents
+namespace PlataformaEducacao.Gestao.Application.Events
 {
-    public class AlunoCadastradoEvent : IntegrationEvent
+    public class AlunoCadastroRealizadoEvent : Event
     {
         public Guid AlunoId { get; private set; }
         public string Nome { get; private set; }
         public string Email { get; private set; }
         public string Senha { get; private set; }
         public string ConfirmacaoSenha { get; private set; }    
-        public AlunoCadastradoEvent(Guid alunoId, string nome, string email, string senha, string confirmacaoSenha)
+        public AlunoCadastroRealizadoEvent(Guid alunoId, string nome, string email, string senha, string confirmacaoSenha)
         {
             AggregateId = alunoId;            
             AlunoId = alunoId;

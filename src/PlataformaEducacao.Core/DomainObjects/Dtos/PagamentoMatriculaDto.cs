@@ -1,8 +1,7 @@
 ﻿namespace PlataformaEducacao.Core.DomainObjects.Dtos
 {
     public class PagamentoMatriculaDto
-    {
-        public Guid MatriculaId { get; set; }
+    {        
         public Guid CursoId { get; set; }
         public Guid AlunoId { get; set; }
         public decimal Valor { get; set; }
@@ -11,9 +10,8 @@
         public string MesAnoExpiracao { get; set; }
         public string Ccv { get; set; }
 
-        public PagamentoMatriculaDto(Guid matriculaId, Guid cursoId, Guid alunoId, decimal valor, string nomeCartao, string numeroCartao, string mesAnoExpiracao, string ccv)
-        {
-            MatriculaId = matriculaId;
+        public PagamentoMatriculaDto(Guid cursoId, Guid alunoId, decimal valor, string nomeCartao, string numeroCartao, string mesAnoExpiracao, string ccv)
+        {            
             CursoId = cursoId;
             AlunoId = alunoId;
             Valor = valor;
