@@ -70,6 +70,12 @@ namespace PlataformaEducacao.Gestao.Application.Tests.Configs
             return new MatricularAlunoCommand(alunoId, command.CursoId, command.CursoNome, command.CursoValor, command.CursoTotalAulas);
         }
 
+        public MatricularAlunoCommand GerarMatricularAlunoCommandValidoComQuantidadeDeAulas(Guid alunoId, int totalAulas)
+        {
+            var command = GerarMatricularAlunoCommandValido();
+            return new MatricularAlunoCommand(alunoId, command.CursoId, command.CursoNome, command.CursoValor, totalAulas);
+        }
+
 
         public void Dispose(){}
     }

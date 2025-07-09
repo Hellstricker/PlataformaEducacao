@@ -14,8 +14,4 @@
     <ProjectReference Include="..\PlataformaEducacao.Gestao.Domain\PlataformaEducacao.Gestao.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Events\" />
-  </ItemGroup>
-
 </Project>

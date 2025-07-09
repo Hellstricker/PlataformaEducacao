@@ -4,6 +4,7 @@ using PlataformaEducacao.Cadastros.Data;
 using PlataformaEducacao.Cadastros.Domain;
 using PlataformaEducacao.Gestao.Data;
 using PlataformaEducacao.Gestao.Domain;
+using PlataformaEducacao.Pagamentos.Data;
 using PlataformaEducacao.WebApps.WebApi.Contexts;
 using PlataformaEducacao.WebApps.WebApi.Enums;
 
@@ -25,14 +26,14 @@ namespace PlataformaEducacao.WebApps.WebApi.Helpers
             var userContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
             var cursosContext = scope.ServiceProvider.GetRequiredService<CursoContext>();
             var gestaoContext = scope.ServiceProvider.GetRequiredService<GestaoContext>();
-            //var pagamentosContext = scope.ServiceProvider.GetRequiredService<PagamentosContext>();
+            var pagamentosContext = scope.ServiceProvider.GetRequiredService<PagamentosContext>();
 
             if(environment.IsDevelopment())
             {
                 await userContext.Database.MigrateAsync();
                 await cursosContext.Database.MigrateAsync();
                 await gestaoContext.Database.MigrateAsync();
-                //await pagamentosContext.Database.MigrateAsync();
+                await pagamentosContext.Database.MigrateAsync();
 
                 await EnsureSeed(userContext, cursosContext, gestaoContext);//, alunosContext, cursosContext);
             }
@@ -51,14 +52,23 @@ namespace PlataformaEducacao.WebApps.WebApi.Helpers
             if (cursosContext.Aulas.Any())
                 return;
 
-            //var aula1 = new Aula("Introdução ao DDD", "Nesta aula vamos aprender o que é DDD e como aplicá-lo em nossos projetos.", 55, cursoId);
-            //var aula2 = new Aula("Introdução ao TDD", "Nesta aula vamos aprender o que é TDD e como aplicá-lo em nossos projetos.", 45, cursoId);
-            //var aula3 = new Aula("Introdução ao ASP.NET Core", "Nesta aula vamos aprender o que é ASP.NET Core e como aplicá-lo em nossos projetos.", 60, cursoId);
-            //var aula4 = new Aula("Introdução ao Entity Framework Core", "Nesta aula vamos aprender o que é Entity Framework Core e como aplicá-lo em nossos projetos.", 50, cursoId);
-            //var aula5 = new Aula("Introdução ao ASP.NET Core Web API", "Nesta aula vamos aprender o que é ASP.NET Core Web API e como aplicá-lo em nossos projetos.", 40, cursoId);
-            //var aula6 = new Aula("Introdução ao C#", "Nesta aula vamos aprender o que é C# e como aplicá-lo em nossos projetos.", 30, cursoId);
+            var aula1 = new Aula("Introdução ao DDD",55, "Nesta aula vamos aprender o que é DDD e como aplicá-lo em nossos projetos.");
+            
+            var aula2 = new Aula("Introdução ao TDD", 45, "Nesta aula vamos aprender o que é TDD e como aplicá-lo em nossos projetos.");
+            var aula3 = new Aula("Introdução ao ASP.NET Core", 60, "Nesta aula vamos aprender o que é ASP.NET Core e como aplicá-lo em nossos projetos.");
+            var aula4 = new Aula("Introdução ao Entity Framework Core", 50, "Nesta aula vamos aprender o que é Entity Framework Core e como aplicá-lo em nossos projetos.");
+            var aula5 = new Aula("Introdução ao ASP.NET Core Web API", 40, "Nesta aula vamos aprender o que é ASP.NET Core Web API e como aplicá-lo em nossos projetos.");
+            var aula6 = new Aula("Introdução ao C#", 30, "Nesta aula vamos aprender o que é C# e como aplicá-lo em nossos projetos.");
 
-            //cursosContext.Aulas.AddRange(aula1, aula2, aula3, aula4, aula5, aula6);
+            aula1.AssociarCurso(cursoId);
+            aula2.AssociarCurso(cursoId);
+            aula3.AssociarCurso(cursoId);
+            aula4.AssociarCurso(cursoId);
+            aula5.AssociarCurso(cursoId);
+            aula6.AssociarCurso(cursoId);
+
+
+            cursosContext.Aulas.AddRange(aula1, aula2, aula3, aula4, aula5, aula6);
             await cursosContext.SaveChangesAsync();
                        
 

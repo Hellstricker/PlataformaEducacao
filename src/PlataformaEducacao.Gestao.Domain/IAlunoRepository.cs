@@ -7,6 +7,8 @@ namespace PlataformaEducacao.Gestao.Domain
         void Adicionar(Aluno aluno);
         void Adicionar(Matricula matricula);
         void Atualizar(Matricula matricula);
+        void Adicionar(Certificado certificado);
+        Task<Matricula> ObterMatriculaParaPagamento(Guid alunoId, Guid cursoId);
         Task<Aluno> ObterPorIdAsync(Guid id);
     }
 }

@@ -90,5 +90,50 @@ namespace PlataformaEducacao.Gestao.Application.Tests
             Assert.True(result);
             Assert.Empty(command.ValidationResult.Errors);
         }
+
+        [Fact(DisplayName = "AlunoFinalizarAulaCommand Valido")]
+        [Trait("Categoria", "Dominio Gestao Commands")]
+        public void AlunoFinalizarAulaCommand_ComandoValido_NaoDeveRetornarErro()
+        {
+            // Arrange
+            var command = new AlunoFinalizarAulaCommand(Guid.NewGuid(),Guid.NewGuid(),Guid.NewGuid());
+
+            // Act            
+            var result = command.EhValido();
+            
+            // Assert
+            Assert.True(result);
+            Assert.Empty(command.ValidationResult.Errors);
+        }
+
+        [Fact(DisplayName = "AlunoFinalizarMatriculaCommand Valido")]
+        [Trait("Categoria", "Dominio Gestao Commands")]
+        public void AlunoFinalizarMatriculaCommand_ComandoValido_NaoDeveRetornarErro()
+        {
+            // Arrange
+            var command = new AlunoFinalizarMatriculaCommand(Guid.NewGuid(),Guid.NewGuid());
+
+            // Act            
+            var result = command.EhValido();
+
+            // Assert
+            Assert.True(result);
+            Assert.Empty(command.ValidationResult.Errors);
+        }
+
+        [Fact(DisplayName = "AlunoGerarCertificadoCommand Valido")]
+        [Trait("Categoria", "Dominio Gestao Commands")]
+        public void AlunoGerarCertificadoCommand_ComandoValido_NaoDeveRetornarErro()
+        {
+            // Arrange
+            var command = new AlunoGerarCertificadoCommand(Guid.NewGuid(), Guid.NewGuid());            
+
+            // Act            
+            var result = command.EhValido();
+
+            // Assert
+            Assert.True(result);
+            Assert.Empty(command.ValidationResult.Errors);
+        }
     }
 }

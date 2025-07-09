@@ -27,7 +27,12 @@ namespace PlataformaEducacao.Gestao.Data.Repositories
 
         public void Atualizar(Matricula matricula)
         {
-            _context.Matriculas.Add(matricula);
+            _context.Matriculas.Update(matricula);
+        }
+
+        public void Adicionar(Certificado certificado)
+        {
+            _context.Certificados.Add(certificado);
         }
 
         public async Task<Aluno> ObterPorIdAsync(Guid alunoId)
@@ -36,6 +41,11 @@ namespace PlataformaEducacao.Gestao.Data.Repositories
             if (aluno == null) return null;
             await _context.Entry(aluno).Collection(a => a.Matriculas).LoadAsync();
             return aluno;
+        }
+
+        public async Task<Matricula> ObterMatriculaParaPagamento(Guid alunoId, Guid cursoId)
+        {
+            return await _context.Matriculas.AsNoTracking().FirstOrDefaultAsync(c => c.AlunoId == alunoId && c.Curso.CursoId == cursoId && c.Status == StatusMatriculaEnum.PENDENTE_PAGAMENTO);            
         }
 
         public void Dispose()

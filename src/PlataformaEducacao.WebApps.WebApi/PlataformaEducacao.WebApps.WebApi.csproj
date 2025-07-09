@@ -25,6 +25,9 @@
     <ProjectReference Include="..\PlataformaEducacao.Gestao.Application\PlataformaEducacao.Gestao.Application.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.Gestao.Data\PlataformaEducacao.Gestao.Data.csproj" />
     <ProjectReference Include="..\PlataformaEducacao.Gestao.Domain\PlataformaEducacao.Gestao.Domain.csproj" />
+    <ProjectReference Include="..\PlataformaEducacao.Pagamentos.AntiCorruption\PlataformaEducacao.Pagamentos.AntiCorruption.csproj" />
+    <ProjectReference Include="..\PlataformaEducacao.Pagamentos.Business\PlataformaEducacao.Pagamentos.Business.csproj" />
+    <ProjectReference Include="..\PlataformaEducacao.Pagamentos.Data\PlataformaEducacao.Pagamentos.Data.csproj" />
   </ItemGroup>
 
   <ItemGroup>

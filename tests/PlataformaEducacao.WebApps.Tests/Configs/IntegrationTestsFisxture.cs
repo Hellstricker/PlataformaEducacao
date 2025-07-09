@@ -129,6 +129,23 @@ namespace PlataformaEducacao.WebApps.Tests.Configs
             return await Client.PostAsJsonAsync($"api/alunos/{alunoId}/matricular", matricularAlunoViewModel);
         }
 
+        public async Task<HttpResponseMessage> ChamaEndpointPagarMatriculaAluno(Guid alunoId, PagamentoMatriculaViewModel pagamentoMatriculaAlunoViewModel)
+        {
+            return await Client.PostAsJsonAsync($"api/alunos/{alunoId}/pagar-matricula-curso", pagamentoMatriculaAlunoViewModel);
+        }
+
+        public async Task<HttpResponseMessage> ChamaEndpointFinalizarAulaAluno(Guid alunoId, FinalizarAulaViewModel finalizarAulaViewModel)
+        {
+            return await Client.PostAsJsonAsync($"api/alunos/{alunoId}/finalizar-aula", finalizarAulaViewModel);
+        }
+
+        public async Task<HttpResponseMessage> ChamaEndpointObterMatriculasAluno(Guid alunoId)
+        {
+            return await Client.GetAsync($"api/alunos/{alunoId}/minhas-matriculas");
+        }
+        
+
+
         private async Task<HttpResponseMessage> ChamaEndpointCadastrarAula(Guid cursoId, AulaViewModel aulaViewModel)
         {            
             return await Client.PostAsJsonAsync($"api/cursos/{cursoId}/cadastrar-aula", aulaViewModel);

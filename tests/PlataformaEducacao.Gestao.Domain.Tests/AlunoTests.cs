@@ -73,6 +73,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
             var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            
             // Act
             aluno.Matricular(matricula);
 
@@ -89,8 +90,10 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
             var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
             aluno.Matricular(matricula);
 
-            // Act && Assert
+            // Act
             var ex = Assert.Throws<DomainException>(() => aluno.Matricular(matricula));
+
+            // Assert            
             Assert.Contains(Aluno.AlunoJaMatriculado, ex.Message);
         }
 
@@ -100,10 +103,13 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaComStatusInvalido(aluno.Id);            
+            var matricula = _fixtures.GerarMatriculaValidaComStatusInvalido(aluno.Id);
+            aluno.Matricular(matricula);
 
-            // Act && Assert
-            var ex = Assert.Throws<DomainException>(() => matricula.Pagar());
+            // Act
+            var ex = Assert.Throws<DomainException>(() => aluno.PagarMatricula(matricula.Curso.CursoId));
+
+            // Assert            
             Assert.Contains(Matricula.MatriculaNaoEstaPendente, ex.Message);
         }
 
@@ -117,10 +123,194 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
             aluno.Matricular(matricula);            
 
             // Act
-             matricula.Pagar();
+             aluno.PagarMatricula(matricula.Curso.CursoId);
 
             //Assert
             Assert.Equal(StatusMatriculaEnum.EM_ANDAMENTO, matricula.Status);
+        }
+
+        [Fact(DisplayName = "Aluno FinalizarAula Aula em Curso Não Em Andamento")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Aluno_FinalizarAulaCursoNaoAndamento_DeveGerarExcecao()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            aluno.Matricular(matricula);
+
+            // Act
+            var ex = Assert.Throws<DomainException>(() => aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid()));
+
+            //Assert
+            Assert.Contains(Matricula.MatriculaNaoEstaEmAndamento, ex.Message);
+        }
+
+        [Fact(DisplayName = "Aluno FinalizarAula Aula em Curso Não Matriculado")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Aluno_FinalizarAulaAulaCursoNaoMatriculado_DeveGerarExcecao()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            aluno.Matricular(matricula);
+
+            // Act
+            var ex = Assert.Throws<DomainException>(() => aluno.FinalizarAula(Guid.NewGuid(), Guid.NewGuid()));
+
+            //Assert
+            Assert.Contains(Aluno.AlunoNaoEstaMatriculado , ex.Message);
+        }
+
+        [Fact(DisplayName = "Aluno FinalizarAula Aula com Sucesso")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Aluno_FinalizarAulaComSucesso_NaoDeveGerarExcecao()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            aluno.Matricular(matricula);
+            aluno.PagarMatricula(matricula.Curso.CursoId);
+            var aulaId= Guid.NewGuid();
+            // Act
+            aluno.FinalizarAula(matricula.Curso.CursoId, aulaId);
+
+            //Assert            
+            Assert.NotNull(aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado);
+            Assert.True(aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado!.Progresso > 0);
+            Assert.Single(aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado!.AulasFinalizadas.Where(a => a.AulaId == aulaId));
+        }
+
+        [Fact(DisplayName = "Aluno FinalizarAula Em Duplicidade")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Aluno_FinalizarAulaEmDuplicidade_NaoDeveAlterarEstado()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            aluno.Matricular(matricula);
+            aluno.PagarMatricula(matricula.Curso.CursoId);
+            var aulaId = Guid.NewGuid();
+            aluno.FinalizarAula(matricula.Curso.CursoId, aulaId);
+            var progresso = aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado!.Progresso;
+            var quantidadeAulasFinalizadas = aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado!.AulasFinalizadas.Where(a => a.AulaId == aulaId);
+
+
+            // Act
+            aluno.FinalizarAula(matricula.Curso.CursoId, aulaId);
+
+            //Assert            
+            Assert.NotNull(aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado);
+            Assert.Equal(progresso, aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado!.Progresso);
+            Assert.Equal(quantidadeAulasFinalizadas, aluno.ObterMatricula(matricula.Curso.CursoId).Curso.HistoricoAprendizado!.AulasFinalizadas.Where(a => a.AulaId == aulaId));
+        }
+
+        [Fact(DisplayName = "Aluno Finalizar Matricula Curso Inexistente")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Matricula_FinalizarMatriculaCursoInexistente_DeveGerarExcecao()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            aluno.Matricular(matricula);
+            // Act
+            var ex = Assert.Throws<DomainException>(() => aluno.FinalizarMatricula(Guid.NewGuid()));
+            
+            // Assert            
+            Assert.Equal(Aluno.AlunoNaoEstaMatriculado, ex.Message);
+        }
+
+
+        [Fact(DisplayName = $"Aluno Finalizar Matricula Status {nameof(StatusMatriculaEnum.PENDENTE_PAGAMENTO)}")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Matricula_FinalizarMatriculaPendenteDePagamento_MatriculaDeveContinuarPendenteDePagamento()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            aluno.Matricular(matricula);
+            // Act
+            aluno.FinalizarMatricula(matricula.Curso.CursoId);
+
+            // Assert            
+            Assert.Equal(StatusMatriculaEnum.PENDENTE_PAGAMENTO, matricula.Status);
+        }
+
+        [Fact(DisplayName = "Aluno Finzalizar Matricula Progresso Sem progresso completo")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Matricula_FinalizarMatriculaSemProgressoSemCompleto_MatriculaDeveContinuarEmAndamento()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            aluno.Matricular(matricula);
+            aluno.PagarMatricula(matricula.Curso.CursoId);            
+            aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
+
+            // Act
+            aluno.FinalizarMatricula(matricula.Curso.CursoId);
+
+            // Assert            
+            Assert.Equal(StatusMatriculaEnum.EM_ANDAMENTO, matricula.Status);
+        }
+
+        [Fact(DisplayName = "Aluno Finzalizar Matricula Progresso Completo")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Matricula_FinalizarMatriculaSemProgressoCompleto_MatriculaDeveContinuarEmAndamento()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            aluno.Matricular(matricula);
+            aluno.PagarMatricula(matricula.Curso.CursoId);            
+            aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
+            aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
+
+            // Act
+            aluno.FinalizarMatricula(matricula.Curso.CursoId);
+
+            // Assert            
+            Assert.Equal(StatusMatriculaEnum.CONCLUIDA, matricula.Status);
+        }
+
+
+        [Fact(DisplayName = "Aluno Gerar Certificado de Curso Incompleto")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Matricula_GerarCertificadoDeCursoIncompleto_CertificadoNaoDeveSerGerado()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            aluno.Matricular(matricula);
+            aluno.PagarMatricula(matricula.Curso.CursoId);
+            aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
+
+
+            // Act
+            aluno.GerarCertificado(matricula.Curso.CursoId);
+
+            // Assert            
+            Assert.Empty(aluno.Certificados);
+        }
+
+        [Fact(DisplayName = "Aluno Gerar Certificado de Curso Finalizado")]
+        [Trait("Categoria", "Domínio Gestao Entidade Aluno")]
+        public void Matricula_GerarCertificadoDeCursoFinalizado_CertificadoDeveSerGerado()
+        {
+            // Arrange
+            var aluno = _fixtures.GerarAlunoValido();
+            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            aluno.Matricular(matricula);
+            aluno.PagarMatricula(matricula.Curso.CursoId);
+            aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
+            aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
+            aluno.FinalizarMatricula(matricula.Curso.CursoId);
+
+            // Act
+            aluno.GerarCertificado(matricula.Curso.CursoId);
+
+            // Assert            
+            Assert.NotEmpty(aluno.Certificados);
+            Assert.Contains(matricula.Curso.CursoNome, aluno.Certificados.Select(c=>c.NomeCurso));
         }
     }
 }

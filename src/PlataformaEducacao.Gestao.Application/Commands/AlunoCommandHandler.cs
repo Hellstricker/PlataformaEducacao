@@ -4,13 +4,17 @@ using PlataformaEducacao.Core.Messages.IntegrationEvents;
 using PlataformaEducacao.Core.Messages;
 using PlataformaEducacao.Core.Messages.Notifications;
 using PlataformaEducacao.Gestao.Domain;
+using PlataformaEducacao.Gestao.Application.Events;
 
 namespace PlataformaEducacao.Gestao.Application.Commands
 {
     public class AlunoCommandHandler : 
         IRequestHandler<CadastrarAlunoCommand, bool>,
         IRequestHandler<MatricularAlunoCommand, bool>,
-        IRequestHandler<AlunoPagarMatriculaCommand, bool>
+        IRequestHandler<AlunoPagarMatriculaCommand, bool>,
+        IRequestHandler<AlunoFinalizarAulaCommand, bool>,
+        IRequestHandler<AlunoFinalizarMatriculaCommand, bool>,
+        IRequestHandler<AlunoGerarCertificadoCommand, bool>
     {
         private readonly IAlunoRepository _alunoRepository;
         private readonly IMediatorHandler _mediatorHandler;
@@ -34,18 +38,10 @@ namespace PlataformaEducacao.Gestao.Application.Commands
             if (!ValidarComando(message)) return false;
             var matricula = new Matricula(message.AlunoId, message.CursoId, message.CursoNome, message.CursoValor, message.CursoTotalAulas);
             var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
-            
-            if (aluno == null)
-            {
-                await _mediatorHandler.PublicarNotificacao(new DomainNotification(message.MessageType, AlunoNaoEncontrado));
-                return false;
-            }
-            
-            if (aluno.EstaMatriculado(message.CursoId))
-            {
-                await _mediatorHandler.PublicarNotificacao(new DomainNotification(message.MessageType, Aluno.AlunoJaMatriculado));
-                return false;
-            }
+
+            if (!await ValidarAluno(aluno)) return false;
+
+            if (!await ValidarSeAlunoNaoEstaMatriculado(aluno, message.CursoId)) return false;
             
             aluno.Matricular(matricula);
 
@@ -57,33 +53,114 @@ namespace PlataformaEducacao.Gestao.Application.Commands
         {
             if (!ValidarComando(message)) return false;
             var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
-            
-            if (aluno == null)
-            {
-                await _mediatorHandler.PublicarNotificacao(new DomainNotification(message.MessageType, AlunoNaoEncontrado));
-                return false;
-            }
-            
-            if (!aluno.EstaMatriculado(message.CursoId))
-            {
-                await _mediatorHandler.PublicarNotificacao(new DomainNotification(this.GetType().ToString(), Aluno.AlunoNaoEstaMatriculado));
-                return false;
-            }
+
+            if (!await ValidarAluno(aluno)) return false;
+
+            if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
 
             var matricula = aluno.ObterMatricula(message.CursoId);
 
-            if (!matricula.PodeSerPaga())
-            {
-                await _mediatorHandler.PublicarNotificacao(new DomainNotification(this.GetType().ToString(), Matricula.MatriculaNaoEstaPendente));
-                return false;
-            }
+            if(!await ValidarSeMatriculaPodeSerPaga(matricula)) return false;                
 
-            aluno.PagarMatricula(message.CursoId);
-            matricula = aluno.ObterMatricula(message.CursoId);
+            aluno.PagarMatricula(message.CursoId);            
             _alunoRepository.Atualizar(matricula);
             return await _alunoRepository.UnitOfWork.CommitAsync();
         }
 
+        public async Task<bool> Handle(AlunoFinalizarAulaCommand message, CancellationToken cancellationToken)
+        {
+            if(!ValidarComando(message))return false;
+            var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
+
+            if (!await ValidarAluno(aluno)) return false;
+
+            if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
+
+            var matricula = aluno.ObterMatricula(message.CursoId);
+
+            if (!await ValidarSeMatriculaPodeFinalizarAula(matricula)) return false;
+
+            aluno.FinalizarAula(message.CursoId, message.AulaId);            
+            matricula.AdicionarEvento(new AulaFinalizadaEvent(aluno.Id, message.CursoId, message.AulaId, matricula.Curso.CursoTotalAulas, matricula.Curso.HistoricoAprendizado!.Progresso!.Value));
+            _alunoRepository.Atualizar(matricula);            
+            return await _alunoRepository.UnitOfWork.CommitAsync();
+        }
+
+        public async Task<bool> Handle(AlunoFinalizarMatriculaCommand message, CancellationToken cancellationToken)
+        {
+            if (!ValidarComando(message)) return false;
+            var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
+
+            if (!await ValidarAluno(aluno)) return false;
+
+            if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
+
+            var matricula = aluno.ObterMatriculaParaFinalizar(message.CursoId);
+            
+            if(matricula == null) return false;
+
+            aluno.FinalizarMatricula(message.CursoId);
+            matricula.AdicionarEvento(new MatriculaFinalizadaEvent(aluno.Id, message.CursoId));
+            _alunoRepository.Atualizar(matricula);
+            return await _alunoRepository.UnitOfWork.CommitAsync();
+        }
+
+        public async Task<bool> Handle(AlunoGerarCertificadoCommand message, CancellationToken cancellationToken)
+        {
+            if (!ValidarComando(message)) return false;
+            var aluno = await _alunoRepository.ObterPorIdAsync(message.AlunoId);
+
+            if (!await ValidarAluno(aluno)) return false;
+
+            if (!await ValidarSeAlunoEstaMatriculado(aluno, message.CursoId)) return false;
+
+            var matricula = aluno.ObterMatriculaCursoFinalizado(message.CursoId);
+
+            if (matricula == null) return false;
+
+            aluno.GerarCertificado(message.CursoId);
+            var certificado = aluno.Certificados.First(c => c.NomeCurso == matricula.Curso.CursoNome);
+            certificado.AdicionarEvento(new CertificadoGeradoEvent(certificado.AlunoId, certificado.NumeroCertificado, certificado.NomeCurso, certificado.DataCadastro ));
+            _alunoRepository.Adicionar(certificado);
+            return await _alunoRepository.UnitOfWork.CommitAsync();
+        }
+
+
+
+        private async Task<bool> ValidarSeMatriculaPodeFinalizarAula(Matricula matricula)
+        {
+            return await Validar(matricula.PodeFinalizarAula(), Matricula.MatriculaNaoEstaEmAndamento);
+        }
+        private async Task<bool> ValidarSeMatriculaPodeSerPaga(Matricula matricula)
+        {
+            return await Validar(matricula.PodeSerPaga(), Matricula.MatriculaNaoEstaPendente);
+        }
+        private async Task<bool> ValidarSeAlunoEstaMatriculado(Aluno aluno, Guid cursoId)
+        {
+            return await Validar(aluno.EstaMatriculado(cursoId), Aluno.AlunoNaoEstaMatriculado);            
+        }
+        private async Task<bool> ValidarSeAlunoNaoEstaMatriculado(Aluno aluno, Guid cursoId)
+        {
+            return await Validar(!aluno.EstaMatriculado(cursoId), Aluno.AlunoJaMatriculado);            
+        }
+        private async Task<bool> Validar(bool condicao, string mensagemSeFalso)
+        {
+            if (!condicao)
+            {
+                await _mediatorHandler.PublicarNotificacao(new DomainNotification(this.GetType().Name, mensagemSeFalso));
+                return false;
+            }
+            return true;
+        }
+        private async Task<bool> ValidarAluno(Aluno aluno)
+        {
+            if (aluno == null)
+            {
+                await _mediatorHandler.PublicarNotificacao(new DomainNotification(this.GetType().Name, AlunoNaoEncontrado));
+                return false;
+            }
+            return true;
+        }
         private bool ValidarComando(Command message)
         {
             if (message.EhValido()) return true;
@@ -93,8 +170,6 @@ namespace PlataformaEducacao.Gestao.Application.Commands
                 _mediatorHandler.PublicarNotificacao(new DomainNotification(message.MessageType, error.ErrorMessage));
             }
             return false;
-        }
-
-        
+        }        
     }    
 }

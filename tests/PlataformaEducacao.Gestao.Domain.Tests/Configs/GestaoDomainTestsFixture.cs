@@ -38,6 +38,11 @@ namespace PlataformaEducacao.Gestao.Domain.Tests.Configs
 
         public void Dispose(){}
 
+        public Matricula GerarMatriculaValidaDuasAulas(Guid alunoId)
+        {
+            return Matricula.MariculaFactory.NovaMatriculaCorreta(alunoId, Guid.NewGuid(), "Curso Nome", 1000m, 2);
+        }
+
         public Matricula GerarMatriculaValida(Guid alunoId)
         {
             return Matricula.MariculaFactory.NovaMatriculaCorreta(alunoId, Guid.NewGuid(), "Curso Nome", 1000m, 10);            

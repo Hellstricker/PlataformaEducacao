@@ -20,6 +20,7 @@ namespace PlataformaEducacao.Gestao.Data
 
         public DbSet<Aluno> Alunos { get; set; }
         public DbSet<Matricula> Matriculas { get; set; }
+        public DbSet<Certificado> Certificados { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +31,7 @@ namespace PlataformaEducacao.Gestao.Data
             modelBuilder.Ignore<Event>();
             modelBuilder.Ignore<ValidationResult>();
             modelBuilder.Ignore<CursoMatriculado>();
+            modelBuilder.Ignore<HistoricoAprendizado>();
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GestaoContext).Assembly);
 

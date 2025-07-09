@@ -1,4 +1,5 @@
 ﻿using Castle.Components.DictionaryAdapter.Xml;
+using PlataformaEducacao.Core.DomainObjects;
 using PlataformaEducacao.Gestao.Domain.Tests.Configs;
 
 namespace PlataformaEducacao.Gestao.Domain.Tests
@@ -26,6 +27,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
             // Assert
             Assert.True(result);
             Assert.Empty(matricula.ValidationResult.Errors);
-        }
+            Assert.Equal(StatusMatriculaEnum.PENDENTE_PAGAMENTO, matricula.Status);
+        }        
     }
 }

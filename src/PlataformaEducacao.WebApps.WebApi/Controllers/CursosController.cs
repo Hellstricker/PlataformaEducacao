@@ -9,7 +9,8 @@ using PlataformaEducacao.Core.Messages.Notifications;
 using PlataformaEducacao.WebApps.WebApi.Enums;
 
 namespace PlataformaEducacao.WebApps.WebApi.Controllers
-{        
+{
+    [Authorize(Roles = nameof(PerfilUsuarioEnum.ADMIN))]
     public class CursosController : BaseController
     {
         private readonly ICursoApplicationService _cursoApplicationService;

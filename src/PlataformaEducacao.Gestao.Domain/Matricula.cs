@@ -8,6 +8,7 @@ namespace PlataformaEducacao.Gestao.Domain
         public const int MIN_NOMECURSO_CHAR = 10;
         public const int MAX_NOMECURSO_CHAR = 150;
         public const string MatriculaNaoEstaPendente = "Matricula não está pendente de pagamento.";
+        public const string MatriculaNaoEstaEmAndamento = "Matricula não está em andamento";
 
         public Guid AlunoId { get; private set; }
         public CursoMatriculado Curso { get; private set; }
@@ -32,13 +33,13 @@ namespace PlataformaEducacao.Gestao.Domain
             return ValidationResult.IsValid;
         }
 
-        public void Pagar()
+        internal void Pagar()
         {
             if (!PodeSerPaga()) throw new DomainException(MatriculaNaoEstaPendente);
             Status = StatusMatriculaEnum.EM_ANDAMENTO;
         }
 
-        public void TornarPendenteDePagamento()
+        internal void TornarPendenteDePagamento()
         {
             Status = StatusMatriculaEnum.PENDENTE_PAGAMENTO;
         }
@@ -46,6 +47,42 @@ namespace PlataformaEducacao.Gestao.Domain
         public bool PodeSerPaga()
         {
             return Status == StatusMatriculaEnum.PENDENTE_PAGAMENTO;
+        }
+
+        public bool PodeFinalizarAula()
+        {
+            return Status == StatusMatriculaEnum.EM_ANDAMENTO;
+        }
+
+        internal void FinalizarAula(Guid aulaId)
+        {
+            if (!PodeFinalizarAula())
+                throw new DomainException(Matricula.MatriculaNaoEstaEmAndamento);
+            Curso.FinalizarAula(Id, aulaId);
+        }
+
+        internal bool PodeFinalizar()
+        {
+            return
+                Status != StatusMatriculaEnum.PENDENTE_PAGAMENTO &&
+                Curso.HistoricoAprendizado != null &&
+                Curso.HistoricoAprendizado.Progresso == 100;                
+        }
+
+        internal void Finalizar()
+        {
+            if(PodeFinalizar())
+                Status = StatusMatriculaEnum.CONCLUIDA;
+        }
+
+        internal bool EstaFinalizada()
+        {
+            return Status == StatusMatriculaEnum.CONCLUIDA;
+        }
+
+        internal bool NaoEstaFinalizada()
+        {
+            return !EstaFinalizada();
         }
 
         public static class MariculaFactory
@@ -88,6 +125,7 @@ namespace PlataformaEducacao.Gestao.Domain
         public string? CursoNome { get; private set; }
         public decimal CursoValor { get; private set; }
         public int CursoTotalAulas { get; private set; }
+        public HistoricoAprendizado? HistoricoAprendizado { get; set; }
 
         public CursoMatriculado(Guid cursoId, string? cursoNome, decimal cursoValor, int cursoTotalAulas)
         {
@@ -96,7 +134,34 @@ namespace PlataformaEducacao.Gestao.Domain
             CursoValor = cursoValor;
             CursoTotalAulas = cursoTotalAulas;
         }
+
+        internal void FinalizarAula(Guid matriculaId, Guid aulaFinalizadaId)
+        {
+            if(HistoricoAprendizado == null)
+                HistoricoAprendizado = new HistoricoAprendizado();
+
+            HistoricoAprendizado.AtualizarProgresso(matriculaId, aulaFinalizadaId, CursoTotalAulas);
+        }
     }
 
+    public class HistoricoAprendizado
+    {
+        
+        public decimal? Progresso { get; private set; }
+        private readonly List<AulaFinalizada> _aulasFinalizadas = new List<AulaFinalizada>();
+        public IEnumerable<AulaFinalizada> AulasFinalizadas => _aulasFinalizadas;
 
+        internal bool EstaCompleto()
+        {
+            return Progresso == 100M;
+        }
+
+        internal void AtualizarProgresso(Guid mastriculaId, Guid aulaId, int totalAulas)
+        {
+            if (totalAulas <= 0) throw new DomainException("Total de aulas deve ser maior que zero.");            
+            if(_aulasFinalizadas.Any(x=>x.AulaId == aulaId)) return;
+            _aulasFinalizadas.Add(new AulaFinalizada(mastriculaId, aulaId));
+            Progresso = (decimal)_aulasFinalizadas.Count() / totalAulas * 100;
+        }
+    }
 }

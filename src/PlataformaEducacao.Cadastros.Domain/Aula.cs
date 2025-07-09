@@ -38,7 +38,7 @@ namespace PlataformaEducacao.Cadastros.Domain
             Validar();
         }
 
-        internal void AssociarCurso(Guid cursoId)
+        public void AssociarCurso(Guid cursoId)
         {
             CursoId = cursoId;
         }

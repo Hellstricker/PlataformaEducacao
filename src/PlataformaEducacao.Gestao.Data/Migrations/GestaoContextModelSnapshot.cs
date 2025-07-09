@@ -36,6 +36,59 @@ namespace PlataformaEducacao.Gestao.Data.Migrations
                     b.ToTable("Alunos", (string)null);
                 });
 
+            modelBuilder.Entity("PlataformaEducacao.Gestao.Domain.AulaFinalizada", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AulaId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MatriculaId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MatriculaId");
+
+                    b.ToTable("AulasFinalizadas", (string)null);
+                });
+
+            modelBuilder.Entity("PlataformaEducacao.Gestao.Domain.Certificado", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("AlunoId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("Ativo")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("DataCadastro")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("NomeCurso")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<Guid>("NumeroCertificado")
+                        .HasMaxLength(50)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AlunoId");
+
+                    b.ToTable("Certificados", (string)null);
+                });
+
             modelBuilder.Entity("PlataformaEducacao.Gestao.Domain.Matricula", b =>
                 {
                     b.Property<Guid>("Id")
@@ -56,6 +109,28 @@ namespace PlataformaEducacao.Gestao.Data.Migrations
                     b.ToTable("Matriculas", (string)null);
                 });
 
+            modelBuilder.Entity("PlataformaEducacao.Gestao.Domain.AulaFinalizada", b =>
+                {
+                    b.HasOne("PlataformaEducacao.Gestao.Domain.Matricula", "Matricula")
+                        .WithMany()
+                        .HasForeignKey("MatriculaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Matricula");
+                });
+
+            modelBuilder.Entity("PlataformaEducacao.Gestao.Domain.Certificado", b =>
+                {
+                    b.HasOne("PlataformaEducacao.Gestao.Domain.Aluno", "Aluno")
+                        .WithMany("Certificados")
+                        .HasForeignKey("AlunoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Aluno");
+                });
+
             modelBuilder.Entity("PlataformaEducacao.Gestao.Domain.Matricula", b =>
                 {
                     b.HasOne("PlataformaEducacao.Gestao.Domain.Aluno", "Aluno")
@@ -70,17 +145,21 @@ namespace PlataformaEducacao.Gestao.Data.Migrations
                                 .HasColumnType("TEXT");
 
                             b1.Property<Guid>("CursoId")
-                                .HasColumnType("varchar(50)");
+                                .HasColumnType("varchar(50)")
+                                .HasColumnName("CursoId");
 
                             b1.Property<string>("CursoNome")
                                 .IsRequired()
-                                .HasColumnType("varchar(150)");
+                                .HasColumnType("varchar(150)")
+                                .HasColumnName("CursoNome");
 
                             b1.Property<int>("CursoTotalAulas")
-                                .HasColumnType("INTEGER");
+                                .HasColumnType("INTEGER")
+                                .HasColumnName("CursoTotalAulas");
 
                             b1.Property<decimal>("CursoValor")
-                                .HasColumnType("decimal(18,2)");
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("CursoValor");
 
                             b1.HasKey("MatriculaId");
 
@@ -88,6 +167,25 @@ namespace PlataformaEducacao.Gestao.Data.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("MatriculaId");
+
+                            b1.OwnsOne("PlataformaEducacao.Gestao.Domain.HistoricoAprendizado", "HistoricoAprendizado", b2 =>
+                                {
+                                    b2.Property<Guid>("CursoMatriculadoMatriculaId")
+                                        .HasColumnType("TEXT");
+
+                                    b2.Property<decimal?>("Progresso")
+                                        .HasColumnType("decimal(5,2)")
+                                        .HasColumnName("CursoProgresso");
+
+                                    b2.HasKey("CursoMatriculadoMatriculaId");
+
+                                    b2.ToTable("Matriculas");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("CursoMatriculadoMatriculaId");
+                                });
+
+                            b1.Navigation("HistoricoAprendizado");
                         });
 
                     b.Navigation("Aluno");
@@ -98,6 +196,8 @@ namespace PlataformaEducacao.Gestao.Data.Migrations
 
             modelBuilder.Entity("PlataformaEducacao.Gestao.Domain.Aluno", b =>
                 {
+                    b.Navigation("Certificados");
+
                     b.Navigation("Matriculas");
                 });
 #pragma warning restore 612, 618

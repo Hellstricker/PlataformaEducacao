@@ -45,6 +45,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlataformaEducacao.Gestao.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlataformaEducacao.Gestao.Application.Tests", "tests\PlataformaEducacao.Gestao.Application.Tests\PlataformaEducacao.Gestao.Application.Tests.csproj", "{FF0138ED-6955-49D7-B347-C6F01A032E03}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pagamentos", "Pagamentos", "{A7C970D1-99D7-4D0D-BF0F-013E7624968A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlataformaEducacao.Pagamentos.Data", "src\PlataformaEducacao.Pagamentos.Data\PlataformaEducacao.Pagamentos.Data.csproj", "{32286716-FB6B-7505-7BCA-D853298302E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlataformaEducacao.Pagamentos.Business", "src\PlataformaEducacao.Pagamentos.Business\PlataformaEducacao.Pagamentos.Business.csproj", "{275D5553-693E-BE88-E70B-194CA50CAD03}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlataformaEducacao.Pagamentos.AntiCorruption", "src\PlataformaEducacao.Pagamentos.AntiCorruption\PlataformaEducacao.Pagamentos.AntiCorruption.csproj", "{D5D776D9-AC52-AA65-D9E3-E5B0D439BEE8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +111,18 @@ Global
 		{FF0138ED-6955-49D7-B347-C6F01A032E03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF0138ED-6955-49D7-B347-C6F01A032E03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF0138ED-6955-49D7-B347-C6F01A032E03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32286716-FB6B-7505-7BCA-D853298302E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32286716-FB6B-7505-7BCA-D853298302E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32286716-FB6B-7505-7BCA-D853298302E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32286716-FB6B-7505-7BCA-D853298302E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{275D5553-693E-BE88-E70B-194CA50CAD03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{275D5553-693E-BE88-E70B-194CA50CAD03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{275D5553-693E-BE88-E70B-194CA50CAD03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{275D5553-693E-BE88-E70B-194CA50CAD03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D5D776D9-AC52-AA65-D9E3-E5B0D439BEE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D5D776D9-AC52-AA65-D9E3-E5B0D439BEE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D5D776D9-AC52-AA65-D9E3-E5B0D439BEE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D5D776D9-AC52-AA65-D9E3-E5B0D439BEE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +147,10 @@ Global
 		{0DA8DF46-1BDF-4414-90E0-245A5D863A42} = {E19931AD-0DE3-4348-82DC-C494575D53D7}
 		{3DE467D6-D505-43DA-83D1-45E4B0C046C8} = {E19931AD-0DE3-4348-82DC-C494575D53D7}
 		{FF0138ED-6955-49D7-B347-C6F01A032E03} = {B33AAF07-7944-40C6-9467-8A21E0E7FF62}
+		{A7C970D1-99D7-4D0D-BF0F-013E7624968A} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{32286716-FB6B-7505-7BCA-D853298302E0} = {A7C970D1-99D7-4D0D-BF0F-013E7624968A}
+		{275D5553-693E-BE88-E70B-194CA50CAD03} = {A7C970D1-99D7-4D0D-BF0F-013E7624968A}
+		{D5D776D9-AC52-AA65-D9E3-E5B0D439BEE8} = {A7C970D1-99D7-4D0D-BF0F-013E7624968A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {25F749D4-EB33-4BDE-B78D-AD44F392DB38}

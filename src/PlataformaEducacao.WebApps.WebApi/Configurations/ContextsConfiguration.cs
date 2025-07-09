@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PlataformaEducacao.Cadastros.Data;
 using PlataformaEducacao.Gestao.Data;
+using PlataformaEducacao.Pagamentos.Data;
 using PlataformaEducacao.WebApps.WebApi.Contexts;
 
 namespace PlataformaEducacao.WebApps.WebApi.Configurations
@@ -18,6 +19,10 @@ namespace PlataformaEducacao.WebApps.WebApi.Configurations
             );
 
             builder.Services.AddDbContext<GestaoContext>(
+                options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
+            );
+
+            builder.Services.AddDbContext<PagamentosContext>(
                 options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
 
