@@ -81,9 +81,13 @@ A estrutura do projeto é organizada da seguinte forma:
 2. **Configuração do Banco de Dados:**
    - No arquivo `appsettings.Development.json`, localizado na raiz do projeto **PlataformaEducacao.WebApps.WebApi**, configure a string de conexão do SQLite.
    - Ao rodar o projeto pela primeira vez será realizada a criação do banco inserção de dados necesários.
-   - O seed configurará um usuário com perfil Admin. 
-     - login: administrador@teste.com
-     - senha: 12345678
+   - O seed configurará:
+     - um usuário com perfil ADMIN. 
+       - login: administrador@teste.com
+       - senha: 12345678
+     - um usuário com perfil ALUNO. 
+       - login: alunointeligente@teste.com
+       - senha: 12345678
 
 3. **Executar a API:**
    - `cd src/PlataformaEducacao.WebApps.WebApi/`
