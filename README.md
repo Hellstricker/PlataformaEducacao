@@ -17,6 +17,7 @@ O projeto consiste em:
 - **API RESTful:** Exposição dos recursos do blog para integração com outras aplicações ou desenvolvimento de front-ends alternativos.
 - **Autenticação e Autorização:** Implementação de controle de acesso, diferenciando administradores e usuários comuns.
 - **Acesso a Dados:** Implementação de acesso ao banco de dados através de ORM.
+- **Event Sourcing:** Armazenamento de eventos de mudança de estado.
 
 ## **3. Tecnologias Utilizadas**
 
@@ -63,6 +64,7 @@ A estrutura do projeto é organizada da seguinte forma:
 - **Autenticação e Autorização:** Diferenciação entre usuários administradores e alunos.
 - **API REST:** Exposição de endpoints para operações dos bounded contexts GestaoCursos e GestaoAlunos e Pagamento.
 - **Documentação da API:** Documentação automática dos endpoints da API utilizando Swagger.
+- **Event Sourcing:** Armazenamento dos eventos de mudança de estado
 
 ## **6. Como Executar o Projeto**
 
