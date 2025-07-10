@@ -15,9 +15,9 @@ namespace PlataformaEducacao.Gestao.Application.Tests
         private readonly GestaoApplicationTestsFixture _fixture;
         private readonly AutoMocker _mocker;
         private readonly AlunoCommandHandler _handler;
-        private readonly GestaoDomainTestsFixture _alunoTestsFixture;
+        private readonly AlunoTestsFixture _alunoTestsFixture;
 
-        public AlunoCommandHandlerTests(GestaoApplicationTestsFixture fixture, GestaoDomainTestsFixture alunoTestsFixture)
+        public AlunoCommandHandlerTests(GestaoApplicationTestsFixture fixture, AlunoTestsFixture alunoTestsFixture)
         {
             _fixture = fixture;
             _alunoTestsFixture = alunoTestsFixture;

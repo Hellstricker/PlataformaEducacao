@@ -10,7 +10,7 @@ namespace PlataformaEducacao.Gestao.Application.Tests.Configs
     [CollectionDefinition(nameof(GestaoApplicationCollection))]
     public class GestaoApplicationCollection :         
         ICollectionFixture<GestaoApplicationTestsFixture>,
-        ICollectionFixture<GestaoDomainTestsFixture>
+        ICollectionFixture<AlunoTestsFixture>
     {
     }
     public class GestaoApplicationTestsFixture : IDisposable

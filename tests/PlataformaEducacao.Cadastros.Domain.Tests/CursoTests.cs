@@ -8,10 +8,12 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests
     {
 
         private readonly CursoTestsFixtures _fixtures;
+        private readonly AulaTestsFixtures _aulaFixtures;
 
-        public CursoTests(CursoTestsFixtures fixtures)
+        public CursoTests(CursoTestsFixtures fixtures, AulaTestsFixtures aulaFixtures)
         {
             _fixtures = fixtures;
+            _aulaFixtures = aulaFixtures;
         }
 
 
@@ -146,15 +148,12 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests
         public void CursoAdicionarAula_AulaComNomeIgual_DeveGerarDomainException()
         {
             // Arrange
-            var curso = new Curso("Curso de Test-Driven Development", 10, new ConteudoProgramatico("Conteudo Programatico", 300));
-            var aula1 = new Aula("Introdução ao Test-Driven Development", 60, "Conteudo da aula 1");
-            var aula2 = new Aula("Introdução ao Test-Driven Development", 30, "Conteudo da aula 2");            
-            curso.AdicionarAula(aula1);
+            var curso = _fixtures.GerarCursoValido();
+            var aula = _aulaFixtures.GerarAulaValida();            
+            curso.AdicionarAula(aula);
 
-            // Act 
-            var ex = Assert.Throws<DomainException>(() => curso.AdicionarAula(aula2));
-
-            //Assert
+            // Act && Assert
+            var ex = Assert.Throws<DomainException>(() => curso.AdicionarAula(aula));            
             Assert.Contains(Curso.AulaJaExiste, ex.Message);
         }
 
@@ -164,15 +163,12 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests
         public void CursoAdicionarAula_AulaUltrapassaCargaHoraria_DeveGerarDomainException()
         {
             // Arrange
-            int cargaHoraria = 300;
-            var curso = new Curso("Curso de Test-Driven Development", 100, new ConteudoProgramatico("Conteudo Programatico", cargaHoraria));
-            var aula1 = new Aula("Introdução ao Test-Driven Development", cargaHoraria + 1, "Conteudo da aula 1");
-
-            // Act 
-            var ex = Assert.Throws<DomainException>(() => curso.AdicionarAula(aula1));
-
-            //Assert
-            Assert.Contains(Curso.AdicionarAulaUltrapassaCargaHoraria, ex.Message);
+            var curso = _fixtures.GerarCursoValido();            
+            var aula = _aulaFixtures.GerarAulaValida(curso.ConteudoProgramatico.CargaHoraria + 1);
+            
+            // Act && Assert
+            var ex = Assert.Throws<DomainException>(() => curso.AdicionarAula(aula));            
+            Assert.Contains(Curso.AdicionarAulaUltrapassaCargaHoraria, ex.Message);            
         }
 
         [Fact(DisplayName = "Adicionar Aula com Sucesso")]
@@ -180,15 +176,15 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests
         public void CursoAdicionarAula_AulaCorreta_AulaDeveConstarNaLista()
         {
             // Arrange
-            int cargaHoraria = 300;
-            var curso = new Curso("Curso de Test-Driven Development", 100, new ConteudoProgramatico("Conteudo Programatico", cargaHoraria));
-            var aula1 = new Aula("Introdução ao Test-Driven Development", cargaHoraria, "Conteudo da aula 1");
+            var curso = _fixtures.GerarCursoValido();
+            var aula = _aulaFixtures.GerarAulaValida(curso.ConteudoProgramatico.CargaHoraria);
 
             // Act 
-            curso.AdicionarAula(aula1);
+            curso.AdicionarAula(aula);
 
             //Assert
-            Assert.Contains(aula1, curso.Aulas);
+            Assert.Contains(aula, curso.Aulas);
+            Assert.Equal(aula.CursoId, curso.Id);
         }
     }
 }

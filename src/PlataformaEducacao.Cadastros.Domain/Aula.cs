@@ -7,7 +7,7 @@ namespace PlataformaEducacao.Cadastros.Domain
     {
         public const int MINIMO_CARACTERES_TITULO = 10;
         public const int MAXIMO_CARACTERES_TITULO = 150;
-        public const int MINIMO_DURACAO = 0; // em minutos
+        public const int MINIMO_DURACAO = 1; // em minutos
         public const int MAXIMO_CARACTERES_CONTEUDO = 500;
         public const int MINIMO_CARACTERES_CONTEUDO = 15;
 
@@ -15,7 +15,7 @@ namespace PlataformaEducacao.Cadastros.Domain
         public const string TituloEmBrancoOuNulo = "O título da aula não pode ser em branco ou nulo.";
         public const string TituloSemMinimoDeCaracteres = "O título da aula deve ter no mínimo 10 caracteres.";
         public const string TituloMaiorMaximoCaracteres = "O título da aula deve ter no máximo 150 caracteres.";
-        public const string DuracaoDeveSerMaiorQueMinimo = "A duração da aula deve ser maior que zero minutos.";
+        public const string DuracaoDeveSerMaiorOuIgualMinimo = "A duração da aula deve ser maior ou igual a 0 minutos.";
         public const string ConteudoEmBrancoOuNulo = "O conteúdo da aula não pode ser em branco ou nulo.";
         public const string ConteudoUltrapassouMaximoCaracteres = "O conteúdo da aula deve ter no máximo 500 caracteres.";
         public const string ConteudoSemMinimoDeCaracteres = "O conteúdo da aula deve ter no mínimo 15 caracteres.";
@@ -47,7 +47,7 @@ namespace PlataformaEducacao.Cadastros.Domain
         {
             Validacoes.ValidarSeVazio(Titulo, TituloEmBrancoOuNulo);
             Validacoes.ValidarSeStringEntreCaracteres(Titulo, MINIMO_CARACTERES_TITULO, MAXIMO_CARACTERES_TITULO, TituloSemMinimoDeCaracteres, TituloMaiorMaximoCaracteres);
-            Validacoes.ValidarSeMenorOuIgual(Duracao, MINIMO_DURACAO, DuracaoDeveSerMaiorQueMinimo);
+            Validacoes.ValidarSeMenor(Duracao, MINIMO_DURACAO, DuracaoDeveSerMaiorOuIgualMinimo);
             Validacoes.ValidarSeVazio(Conteudo, ConteudoEmBrancoOuNulo);
             Validacoes.ValidarSeStringEntreCaracteres(Conteudo, MINIMO_CARACTERES_CONTEUDO, MAXIMO_CARACTERES_CONTEUDO, ConteudoSemMinimoDeCaracteres, ConteudoUltrapassouMaximoCaracteres);
         }

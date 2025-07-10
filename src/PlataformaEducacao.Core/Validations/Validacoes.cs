@@ -19,6 +19,14 @@ namespace PlataformaEducacao.Core.Validations
             }
         }
 
+        public static void ValidarSeMenor(decimal valor, decimal comparador, string mensagem)
+        {
+            if (valor < comparador)
+            {
+                throw new DomainException(mensagem);
+            }
+        }
+
         public static void ValidarSeNulo(object objeto, string mensagem)
         {
             if(objeto == null)

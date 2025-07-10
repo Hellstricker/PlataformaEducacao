@@ -19,7 +19,7 @@ namespace PlataformaEducacao.WebApps.Tests.Configs
     public class IntegrationApiTestsFixtureCollection :
         ICollectionFixture<IntegrationTestsFisxture<Program>>,
         ICollectionFixture<GestaoApplicationTestsFixture>,
-        ICollectionFixture<GestaoDomainTestsFixture>
+        ICollectionFixture<AlunoTestsFixture>
 
     { }
 

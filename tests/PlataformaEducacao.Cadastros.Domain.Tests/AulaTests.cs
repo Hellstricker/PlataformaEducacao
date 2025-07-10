@@ -1,28 +1,35 @@
-﻿using PlataformaEducacao.Core.DomainObjects;
+﻿using PlataformaEducacao.Cadastros.Domain.Tests.Configs;
+using PlataformaEducacao.Core.DomainObjects;
 
 namespace PlataformaEducacao.Cadastros.Domain.Tests
 {
+    [Collection(nameof(AulaCollection))]
     public class AulaTests
     {
+        private readonly AulaTestsFixtures _fixtures;
+
+        public AulaTests(AulaTestsFixtures fixtures)
+        {
+            _fixtures = fixtures;
+        }
+
         [Fact(DisplayName = "Criar Aula Com Titulo Em Branco Ou Nulo")]
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaSemTitulo_DeveGerarDomainException()
         {            
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula(string.Empty, 10, "Conteudo Aula 1"));
-
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(0, Aula.MINIMO_CARACTERES_CONTEUDO, Aula.MINIMO_DURACAO, Aula.MINIMO_DURACAO + 1));
+            // Assert
             Assert.Equal(Aula.TituloEmBrancoOuNulo, ex.Message);
-
         }
 
         [Fact(DisplayName = $"Criar Aula Com Titulo Sem Minimo de Caracteres")]
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaComTituloMenorQueMinimoCaracteres_DeveGerarDomainException()
         {
-
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula("Titu", 10, "Conteudo Aula 1"));
-
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(Aula.MINIMO_CARACTERES_TITULO - 1, Aula.MINIMO_CARACTERES_CONTEUDO, Aula.MINIMO_DURACAO, Aula.MINIMO_DURACAO + 1));
+            // Assert
             Assert.Equal(Aula.TituloSemMinimoDeCaracteres, ex.Message);
         }
 
@@ -30,9 +37,9 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaComTituloMaiorQueMaximoCaracteres_DeveGerarDomainException()
         {
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula("Etiam posuere quam ac quam. Maecenas aliquet accumsan leo. Nullam dapibus fermentum ipsum. Etiam quis quam. Integer lacinia. Nulla est. Nulla turpis magna,", 10, "Conteudo Aula 1"));
-
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(Aula.MAXIMO_CARACTERES_TITULO + 1, Aula.MINIMO_CARACTERES_CONTEUDO, Aula.MINIMO_DURACAO, Aula.MINIMO_DURACAO + 1));
+            // Assert
             Assert.Equal(Aula.TituloMaiorMaximoCaracteres, ex.Message);
         }
 
@@ -40,50 +47,50 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests
         [Fact(DisplayName = "Criar Aula Com Duracao Igual Zero")]
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaComDuracaoIgualAZero_DeveGerarDomainException()
-        {
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula("Titulo aula", 0 , "Conteudo Aula 1"));
-
-            Assert.Equal(Aula.DuracaoDeveSerMaiorQueMinimo, ex.Message);
+        {            
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(Aula.MINIMO_CARACTERES_TITULO, Aula.MINIMO_CARACTERES_CONTEUDO, 0, 0));
+            // Assert
+            Assert.Equal(Aula.DuracaoDeveSerMaiorOuIgualMinimo, ex.Message);
         }
 
         [Fact(DisplayName = "Criar Aula Com Duracao Negativa")]
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaComDuracaoNegativa_DeveGerarDomainException()
-        {
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula("Titulo aula", -1, "Conteudo Aula 1"));
-
-            Assert.Equal(Aula.DuracaoDeveSerMaiorQueMinimo, ex.Message);
+        {   
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(Aula.MINIMO_CARACTERES_TITULO, Aula.MINIMO_CARACTERES_CONTEUDO, -1, 0));
+            // Assert
+            Assert.Equal(Aula.DuracaoDeveSerMaiorOuIgualMinimo, ex.Message);
         }
         
         [Fact(DisplayName = $"Criar Aula Com Conteudo Em Branco")]
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaComConteudoEmBranco_DeveGerarDomainException()
         {
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula("Titulo aula", 10, string.Empty));
-
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(Aula.MINIMO_CARACTERES_TITULO, 0, Aula.MINIMO_DURACAO, Aula.MINIMO_DURACAO + 1));
+            // Assert
             Assert.Equal(Aula.ConteudoEmBrancoOuNulo, ex.Message);
         }
 
         [Fact(DisplayName = $"Criar Aula Com Conteudo Ultrapassando Maximo de Caracteres")]        
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaComConteudoMaiorQueMaximoCaracteres_DeveGerarDomainException()
-        {
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula("Titulo aula", 10, "In sem justo, commodo ut, suscipit at, pharetra vitae, orci. Duis sapien nunc, commodo et, interdum suscipit, sollicitudin et, dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Aliquam id dolor. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos hymenaeos. Mauris dictum facilisis augue. Fusce tellus. Pellentesque arcu. Maecenas fermentum, sem in pharetra pellentesque, velit turpis volutpat ante, in pharetra metus odio a"));
-
+        {   
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(Aula.MINIMO_CARACTERES_TITULO, Aula.MAXIMO_CARACTERES_CONTEUDO+1, Aula.MINIMO_DURACAO, Aula.MINIMO_DURACAO + 1));
+            // Assert
             Assert.Equal(Aula.ConteudoUltrapassouMaximoCaracteres, ex.Message);
         }
 
         [Fact(DisplayName = $"Criar Aula Com Conteudo Sem Minimo de Caracteres")]
         [Trait("Categoria", "Domínio Cadastro Entidade Aula")]
         public void CriarAula_AulaComConteudoSemQueMaximoCaracteres_DeveGerarDomainException()
-        {
-            //Arrange & Act & Assert
-            var ex = Assert.Throws<DomainException>(() => new Aula("Titulo aula", 10, "Nam quis nu"));
-
+        {            
+            // Arrange & Act
+            var ex = Assert.Throws<DomainException>(() => _fixtures.GerarAula(Aula.MINIMO_CARACTERES_TITULO, Aula.MINIMO_CARACTERES_CONTEUDO - 1, Aula.MINIMO_DURACAO, Aula.MINIMO_DURACAO + 1));
+            // Assert
             Assert.Equal(Aula.ConteudoSemMinimoDeCaracteres, ex.Message);
         }
 
@@ -92,7 +99,7 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests
         public void CriarAula_AulaSemFalha_DeveGerarDomainException()
         {
             //Arrange & Act & Assert
-            var ex = Record.Exception(() => new Aula("Titulo aula", 10, "Conteudo Aula 1"));
+            var ex = Record.Exception(() => _fixtures.GerarAulaValida());
 
             Assert.False(ex is DomainException, ex?.Message);
         }

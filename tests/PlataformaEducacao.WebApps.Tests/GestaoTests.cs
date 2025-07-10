@@ -19,13 +19,13 @@ namespace PlataformaEducacao.WebApps.Tests
     {
         private readonly IntegrationTestsFisxture<Program> _fixture;
         private readonly GestaoApplicationTestsFixture _alunoTestsFixture;
-        private readonly GestaoDomainTestsFixture _gestaoDomainTestsFixture;
+        private readonly AlunoTestsFixture _gestaoDomainTestsFixture;
 
 
         private readonly Aluno _alunoValido;
         private readonly CadastrarAlunoViewModel _cadastrarAlunoViewModelValido;
 
-        public GestaoTests(IntegrationTestsFisxture<Program> fisxture, GestaoApplicationTestsFixture alunoTestsFixture, GestaoDomainTestsFixture gestaoDomainTestsFixture)
+        public GestaoTests(IntegrationTestsFisxture<Program> fisxture, GestaoApplicationTestsFixture alunoTestsFixture, AlunoTestsFixture gestaoDomainTestsFixture)
         {
             _fixture = fisxture;            
             _alunoTestsFixture = alunoTestsFixture;

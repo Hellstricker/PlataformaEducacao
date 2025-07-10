@@ -1,22 +1,14 @@
 ﻿using Bogus;
 using Bogus.DataSets;
-using System.Drawing;
-using System.Reflection.Metadata.Ecma335;
 
 namespace PlataformaEducacao.Cadastros.Domain.Tests.Configs
 {
-    [CollectionDefinition(nameof(CursoCollection))]
-    public class CursoCollection : ICollectionFixture<CursoTestsFixtures>
-    { }
     public class CursoTestsFixtures
     {
-
         private readonly Lorem _lorem = new Lorem("pt_BR");
         private readonly Faker _fakerRandom = new Faker();
-        private readonly Faker<Curso> _faker = new Faker<Curso>("pt_BR");
+        private readonly Faker<Curso> _fakerCurso = new Faker<Curso>("pt_BR");
         private readonly Faker<ConteudoProgramatico> _fakerConteudo = new Faker<ConteudoProgramatico>("pt_BR");
-
-
 
         public Curso GerarCursoValido()
         {
@@ -30,11 +22,10 @@ namespace PlataformaEducacao.Cadastros.Domain.Tests.Configs
         {
             _fakerConteudo
                 .CustomInstantiator(f => new ConteudoProgramatico(GerarTexto(maxCharDescricao), _fakerRandom.Random.Int(minCargaHoraria, maxCargaHoraria)));
-            _faker
+            _fakerCurso
                 .CustomInstantiator(f => new Curso(GerarTexto(maxCharTitulo), Math.Round(_fakerRandom.Random.Decimal(minValorCurso, maxValorCurso), 2), _fakerConteudo.Generate()));                        
-            return _faker.Generate();
+            return _fakerCurso.Generate();
         }
-
       
         private string GerarTexto(int maxChar)
         {

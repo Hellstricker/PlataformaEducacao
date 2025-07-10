@@ -3,12 +3,13 @@ using PlataformaEducacao.Core.DomainObjects;
 using PlataformaEducacao.Gestao.Domain.Tests.Configs;
 
 namespace PlataformaEducacao.Gestao.Domain.Tests
-{    
+{
+    [Collection(nameof(MatriculaCollection))]
     public class MatriculaTests
     {
-        private readonly GestaoDomainTestsFixture _fixtures;
+        private readonly MatriculaTestsFixture _fixtures;
 
-        public MatriculaTests(GestaoDomainTestsFixture fixtures)
+        public MatriculaTests(MatriculaTestsFixture fixtures)
         {
             _fixtures = fixtures;
         }

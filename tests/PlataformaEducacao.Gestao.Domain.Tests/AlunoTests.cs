@@ -1,21 +1,20 @@
-﻿using Moq;
-using Moq.AutoMock;
-using PlataformaEducacao.Core.DomainObjects;
+﻿using PlataformaEducacao.Core.DomainObjects;
 using PlataformaEducacao.Gestao.Domain.Tests.Configs;
 using PlataformaEducacao.Gestao.Domain.Validations;
 
 namespace PlataformaEducacao.Gestao.Domain.Tests
-{    
+{
+    [Collection(nameof(AlunoCollection))]
     public class AlunoTests
     {
 
-        private readonly GestaoDomainTestsFixture _fixtures;
-        private readonly AutoMocker _mocker;
+        private readonly AlunoTestsFixture _fixtures;
+        private readonly MatriculaTestsFixture _fixturesMatricula;
 
-        public AlunoTests(GestaoDomainTestsFixture fixtures)
+        public AlunoTests(AlunoTestsFixture fixtures, MatriculaTestsFixture fixturesMatricula)
         {
             _fixtures = fixtures;
-            _mocker = new AutoMocker();
+            _fixturesMatricula = fixturesMatricula;
         }
 
         [Fact(DisplayName = "Aluno Valido")]
@@ -71,7 +70,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValida(aluno.Id);
             
             // Act
             aluno.Matricular(matricula);
@@ -86,7 +85,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValida(aluno.Id);
             aluno.Matricular(matricula);
 
             // Act
@@ -102,7 +101,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaComStatusInvalido(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValidaComStatusInvalido(aluno.Id);
             aluno.Matricular(matricula);
 
             // Act
@@ -118,7 +117,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValida(aluno.Id);
             aluno.Matricular(matricula);            
 
             // Act
@@ -134,7 +133,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValida(aluno.Id);
             aluno.Matricular(matricula);
 
             // Act
@@ -150,7 +149,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValida(aluno.Id);
             aluno.Matricular(matricula);
 
             // Act
@@ -166,7 +165,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValida(aluno.Id);
             aluno.Matricular(matricula);
             aluno.PagarMatricula(matricula.Curso.CursoId);
             var aulaId= Guid.NewGuid();
@@ -185,7 +184,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValida(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValida(aluno.Id);
             aluno.Matricular(matricula);
             aluno.PagarMatricula(matricula.Curso.CursoId);
             var aulaId = Guid.NewGuid();
@@ -209,7 +208,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValidaDuasAulas(aluno.Id);
             aluno.Matricular(matricula);
             // Act
             var ex = Assert.Throws<DomainException>(() => aluno.FinalizarMatricula(Guid.NewGuid()));
@@ -225,7 +224,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValidaDuasAulas(aluno.Id);
             aluno.Matricular(matricula);
             // Act
             aluno.FinalizarMatricula(matricula.Curso.CursoId);
@@ -240,7 +239,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValidaDuasAulas(aluno.Id);
             aluno.Matricular(matricula);
             aluno.PagarMatricula(matricula.Curso.CursoId);            
             aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
@@ -258,7 +257,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValidaDuasAulas(aluno.Id);
             aluno.Matricular(matricula);
             aluno.PagarMatricula(matricula.Curso.CursoId);            
             aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
@@ -278,7 +277,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValidaDuasAulas(aluno.Id);
             aluno.Matricular(matricula);
             aluno.PagarMatricula(matricula.Curso.CursoId);
             aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
@@ -297,7 +296,7 @@ namespace PlataformaEducacao.Gestao.Domain.Tests
         {
             // Arrange
             var aluno = _fixtures.GerarAlunoValido();
-            var matricula = _fixtures.GerarMatriculaValidaDuasAulas(aluno.Id);
+            var matricula = _fixturesMatricula.GerarMatriculaValidaDuasAulas(aluno.Id);
             aluno.Matricular(matricula);
             aluno.PagarMatricula(matricula.Curso.CursoId);
             aluno.FinalizarAula(matricula.Curso.CursoId, Guid.NewGuid());
