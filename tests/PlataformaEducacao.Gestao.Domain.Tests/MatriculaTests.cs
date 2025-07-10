@@ -3,8 +3,7 @@ using PlataformaEducacao.Core.DomainObjects;
 using PlataformaEducacao.Gestao.Domain.Tests.Configs;
 
 namespace PlataformaEducacao.Gestao.Domain.Tests
-{
-    [Collection(nameof(GestaoDomainCollection))]
+{    
     public class MatriculaTests
     {
         private readonly GestaoDomainTestsFixture _fixtures;

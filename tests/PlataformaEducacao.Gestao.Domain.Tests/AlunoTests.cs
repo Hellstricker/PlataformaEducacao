@@ -5,8 +5,7 @@ using PlataformaEducacao.Gestao.Domain.Tests.Configs;
 using PlataformaEducacao.Gestao.Domain.Validations;
 
 namespace PlataformaEducacao.Gestao.Domain.Tests
-{
-    [Collection(nameof(GestaoDomainCollection))]
+{    
     public class AlunoTests
     {
 
