@@ -1,4 +1,4 @@
-# **PlataformaEducacao - Plataforma de gestão de cursos com DDD, TDD, CQRS, Identity, JWT e API REST**
+# **PlataformaEducacao - Plataforma de gestão de cursos com DDD, TDD, CQRS, Identity, JWT, Event Sourcing e API REST**
 
 ## **1. Apresentação**
 
