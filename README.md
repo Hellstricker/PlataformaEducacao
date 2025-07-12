@@ -94,7 +94,7 @@ A estrutura do projeto é organizada da seguinte forma:
        - senha: 12345678
 
 3. **Configuração do Event Store**
-   - Na pasta raiz do projeto, abra o prompt de comando de sua preferência e execute o comando **docker-compose up**.       
+   - Com o Docker instaládo, acesse a pasta raiz do projeto, abra o prompt de comando de sua preferência e execute o comando **docker-compose up**.       
 
 4. **Executar a API:**
    - `cd src/PlataformaEducacao.WebApps.WebApi/`
